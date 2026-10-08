@@ -1,0 +1,159 @@
+---
+import fs from "node:fs";
+import path from "node:path";
+import { profile, site } from "../site.config";
+import { url } from "../lib/utils";
+
+interface Props {
+  hint?: boolean;
+}
+
+const { hint = false } = Astro.props;
+const photoFile = profile.avatar
+  ? path.join(process.cwd(), "public", profile.avatar.replace(/^\//, ""))
+  : "";
+const hasPhoto = Boolean(photoFile && fs.existsSync(photoFile));
+const avatar = hasPhoto && profile.avatar ? url(profile.avatar) : "";
+---
+
+<section class="profile" id="intro">
+  <div class="profile__top">
+    <figure class="profile__photo">
+      {
+        avatar ? (
+          <img src={avatar} alt={`${profile.displayName || site.author}的照片`} width="220" height="293" decoding="async" />
+        ) : (
+          <div class="profile__photo-slot">
+            <span>个人照片</span>
+            <code>public/images/me.jpg</code>
+          </div>
+        )
+      }
+    </figure>
+    <div class="profile__body">
+      {profile.status && <p class="profile__status">{profile.status}</p>}
+      <h2>{profile.displayName || site.author}</h2>
+      <p class="profile__subtitle">{profile.subtitle}</p>
+      <dl class="profile__facts">
+        {
+          profile.facts.map((fact) => (
+            <div>
+              <dt>{fact.label}</dt>
+              <dd>{fact.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </div>
+
+  <div class="profile-block">
+    <h3>自我介绍</h3>
+    {profile.intro.map((paragraph) => <p>{paragraph}</p>)}
+  </div>
+
+  <div class="profile-block">
+    <h3>教育经历</h3>
+    {
+      profile.education.length ? (
+        <ol class="vita">
+          {profile.education.map((item) => (
+            <li>
+              <p class="vita__meta">{item.period || item.degree}</p>
+              <div>
+                <p class="vita__title">{item.school}</p>
+                <p class="vita__note">
+                  {[item.degree, item.major].filter(Boolean).join(" · ")}
+                  {item.note ? ` · ${item.note}` : ""}
+                </p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <p class="profile-empty">在 <code>src/site.config.ts</code> 的 <code>profile.education</code> 里填写。</p>
+      )
+    }
+  </div>
+
+  <div class="profile-block">
+    <h3>获奖经历</h3>
+    {
+      profile.awards.length ? (
+        <ol class="vita">
+          {profile.awards.map((item) => (
+            <li>
+              <p class="vita__meta">{item.year}</p>
+              <div>
+                <p class="vita__title">{item.title}</p>
+                {item.note && <p class="vita__note">{item.note}</p>}
+              </div>
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <p class="profile-empty">在 <code>src/site.config.ts</code> 的 <code>profile.awards</code> 里填写奖项。</p>
+      )
+    }
+  </div>
+
+  <div class="profile-block">
+    <h3>论文发表</h3>
+    {
+      profile.papers.length ? (
+        <ol class="vita">
+          {profile.papers.map((item) => (
+            <li>
+              <p class="vita__meta">{item.year}</p>
+              <div>
+                <p class="vita__title">
+                  {item.url ? (
+                    <a href={item.url} rel="noopener noreferrer">{item.title}</a>
+                  ) : (
+                    item.title
+                  )}
+                </p>
+                <p class="vita__note">{item.venue}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <p class="profile-empty">在 <code>src/site.config.ts</code> 的 <code>profile.papers</code> 里填写论文。</p>
+      )
+    }
+  </div>
+
+  <div class="profile-block">
+    <h3>项目</h3>
+    {
+      profile.projects.length ? (
+        <ul class="project-list">
+          {profile.projects.map((item) => (
+            <li>
+              <div class="project-list__head">
+                {item.link ? (
+                  <a class="vita__title" href={item.link} rel="noopener noreferrer">{item.name}</a>
+                ) : (
+                  <p class="vita__title">{item.name}</p>
+                )}
+                {item.period && <p class="vita__meta">{item.period}</p>}
+              </div>
+              <p class="vita__note">{item.summary}</p>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="profile-empty">在 <code>src/site.config.ts</code> 的 <code>profile.projects</code> 里填写项目。</p>
+      )
+    }
+  </div>
+
+  {
+    hint && (
+      <p class="profile__hint">
+        打开 <code>src/site.config.ts</code> 里的 <code>profile</code>，把上面这些占位改成你的介绍。
+      </p>
+    )
+  }
+</section>

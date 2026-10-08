@@ -1,0 +1,80 @@
+---
+import { render } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import Giscus from "../../components/Giscus.astro";
+import TagList from "../../components/TagList.astro";
+import Toc from "../../components/Toc.astro";
+import { topics } from "../../site.config";
+import { publishedPosts, type Post } from "../../lib/posts";
+import { formatDate, readingTime, url } from "../../lib/utils";
+
+export async function getStaticPaths() {
+  const posts = await publishedPosts();
+  return posts.map((post) => {
+    const siblings = posts.filter((item) => item.data.topic === post.data.topic);
+    const index = siblings.findIndex((item) => item.id === post.id);
+    return {
+      params: { slug: post.id },
+      props: {
+        post,
+        prev: siblings[index + 1],
+        next: siblings[index - 1],
+      },
+    };
+  });
+}
+
+interface Props {
+  post: Post;
+  prev?: Post;
+  next?: Post;
+}
+
+const { post, prev, next } = Astro.props;
+const { Content, headings } = await render(post);
+const minutes = readingTime(post.body ?? "");
+const topic = topics[post.data.topic];
+---
+
+<Base title={post.data.title} description={post.data.description} type="article" math>
+  <article class="post panel">
+    <figure class="post__hero">
+      <img src={url("images/article-bg.png")} alt="" />
+    </figure>
+    <div class="post__body">
+      <h1 class="page-title">{post.data.title}</h1>
+      <div class="post__meta">
+        <a class="post-topic" href={url(`/${post.data.topic}/`)}>{topic.name}</a>
+        <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
+        <span>{minutes} 分钟阅读</span>
+        {post.data.updatedDate && (
+          <span>更新于 {formatDate(post.data.updatedDate)}</span>
+        )}
+      </div>
+      <TagList tags={post.data.tags} />
+      <Toc headings={headings} />
+      <div class="prose markdown-body">
+        <Content />
+      </div>
+      <nav class="post-nav" aria-label="相邻文章">
+        <div>
+          {prev && (
+            <a href={url(`/posts/${prev.id}/`)}>
+              <span>上一篇</span>
+              <strong>{prev.data.title}</strong>
+            </a>
+          )}
+        </div>
+        <div class="post-nav__next">
+          {next && (
+            <a href={url(`/posts/${next.id}/`)}>
+              <span>下一篇</span>
+              <strong>{next.data.title}</strong>
+            </a>
+          )}
+        </div>
+      </nav>
+      <Giscus />
+    </div>
+  </article>
+</Base>

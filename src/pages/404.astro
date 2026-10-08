@@ -1,0 +1,14 @@
+---
+import Base from "../layouts/Base.astro";
+import { url } from "../lib/utils";
+---
+
+<Base title="没有找到" description="没有找到这个页面">
+  <div class="not-found panel">
+    <div>
+      <h1 class="page-title">404</h1>
+      <p class="lede">没有这个页面。</p>
+      <a href={url("/")}>回到首页</a>
+    </div>
+  </div>
+</Base>

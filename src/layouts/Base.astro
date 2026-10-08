@@ -1,0 +1,162 @@
+---
+import "../styles/global.css";
+import { site } from "../site.config";
+import { url } from "../lib/utils";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+
+interface Props {
+  title?: string;
+  description?: string;
+  type?: "website" | "article";
+  math?: boolean;
+}
+
+const {
+  title,
+  description = site.description,
+  type = "website",
+  math = false,
+} = Astro.props;
+
+const pageTitle = title ? `${title} · ${site.title}` : `${site.title} · ${site.author}`;
+const canonical = new URL(Astro.url.pathname, site.url).href;
+const isArticle = type === "article";
+const bg = `${url(isArticle ? "images/article-bg.png" : "images/blog-bg.jpg")}?v=12`;
+---
+
+<!doctype html>
+<html lang={site.lang} class:list={[{ "is-article": isArticle }]}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="author" content={site.author} />
+    <meta name="description" content={description} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={type} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL(bg, site.url).href} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href={url("favicon.svg")} type="image/svg+xml" />
+    <link rel="alternate" type="application/rss+xml" title={site.title} href={url("rss.xml")} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Shippori+Mincho:wght@400;500;600;700&family=ZCOOL+XiaoWei&family=Zen+Maru+Gothic:wght@400;500;700&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css"
+    />
+    {math && (
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css"
+      />
+    )}
+    <title>{pageTitle}</title>
+    <script is:inline>
+      (function () {
+        try {
+          var stored = localStorage.getItem("theme");
+          var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+          document.documentElement.dataset.theme = stored || (prefersDark ? "dark" : "light");
+        } catch {
+          document.documentElement.dataset.theme = "light";
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="page-bg" aria-hidden="true">
+      <img class="page-bg__bloom" src={bg} alt="" />
+      <div class="page-bg__water"></div>
+      <div class="page-bg__rays"></div>
+      <div class="page-bg__glow"></div>
+      <img class="page-bg__art" src={bg} alt="" />
+      <div class="page-bg__shine"></div>
+      <div class="page-bg__sparkles">
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      </div>
+      <div class="page-bg__frame">
+        <span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+    <div class="site-shell">
+      <a class="skip-link" href="#content">跳到正文</a>
+      <Header />
+      <main id="content" class="wrap">
+        <slot />
+      </main>
+    </div>
+    <Footer />
+    <div class="wallpaper-end" aria-hidden="true"></div>
+    <script is:inline>
+      (function () {
+        var stage = document.querySelector(".page-bg");
+        var img = stage && stage.querySelector(".page-bg__art");
+        var reveal = document.querySelector(".wallpaper-end");
+        var dock = document.querySelector(".cg-dock");
+        if (!img || !reveal) return;
+
+        var ticking = false;
+
+        function progress() {
+          var viewHeight = window.innerHeight;
+          if (viewHeight <= 0) return 0;
+          return Math.min(1, Math.max(0, 1 - reveal.getBoundingClientRect().top / viewHeight));
+        }
+
+        function sync() {
+          ticking = false;
+          var p = progress();
+          document.documentElement.style.setProperty("--wallpaper-p", String(p));
+          var interactive = p > 0.28;
+          document.documentElement.classList.toggle("wallpaper-full", p > 0.8);
+          document.documentElement.classList.toggle("wallpaper-interactive", interactive);
+          if (dock) {
+            if (interactive) dock.removeAttribute("inert");
+            else dock.setAttribute("inert", "");
+          }
+
+          var imageWidth = img.naturalWidth;
+          var imageHeight = img.naturalHeight;
+          if (!imageWidth || !imageHeight) return;
+
+          var viewWidth = window.innerWidth;
+          var viewHeight = window.innerHeight;
+          var cover = Math.max(viewWidth / imageWidth, viewHeight / imageHeight);
+          var contain = Math.min(viewWidth / imageWidth, viewHeight / imageHeight) * 0.9;
+          var scale = cover + (contain - cover) * p;
+          var startY = (viewHeight - imageHeight * cover) * 0.22;
+          var x = (viewWidth - imageWidth * scale) / 2;
+          var y = startY + ((viewHeight - imageHeight * contain) / 2 - startY) * p;
+
+          img.style.width = imageWidth + "px";
+          img.style.height = imageHeight + "px";
+          img.style.maxWidth = "none";
+          img.style.transform = "translate(" + x + "px," + y + "px) scale(" + scale + ")";
+        }
+
+        function onScroll() {
+          if (ticking) return;
+          ticking = true;
+          requestAnimationFrame(sync);
+        }
+
+        img.addEventListener("load", sync);
+        window.addEventListener("scroll", onScroll, { passive: true });
+        window.addEventListener("resize", onScroll);
+        if (typeof ResizeObserver === "function") {
+          new ResizeObserver(onScroll).observe(document.documentElement);
+        }
+        if (img.complete) sync();
+      })();
+    </script>
+  </body>
+</html>

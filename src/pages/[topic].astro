@@ -1,0 +1,31 @@
+---
+import Base from "../layouts/Base.astro";
+import PostCard from "../components/PostCard.astro";
+import { topics, type TopicId } from "../site.config";
+import { publishedPosts, postsByTopic } from "../lib/posts";
+
+export function getStaticPaths() {
+  return (Object.keys(topics) as TopicId[]).map((topic) => ({
+    params: { topic },
+    props: { topic },
+  }));
+}
+
+interface Props {
+  topic: TopicId;
+}
+
+const { topic } = Astro.props;
+const meta = topics[topic];
+const posts = postsByTopic(await publishedPosts(), topic);
+---
+
+<Base title={meta.name} description={meta.description}>
+  <div class="panel">
+    <h1 class="page-title">{meta.name}</h1>
+    <p class="lede">{meta.description} 目前 {posts.length} 篇。</p>
+  </div>
+  <ul class="post-list">
+    {posts.map((post) => <PostCard post={post} />)}
+  </ul>
+</Base>

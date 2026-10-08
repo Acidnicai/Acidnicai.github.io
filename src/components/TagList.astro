@@ -1,0 +1,28 @@
+---
+import { url } from "../lib/utils";
+
+interface Props {
+  tags: string[] | Map<string, number>;
+  current?: string;
+}
+
+const { tags, current } = Astro.props;
+const items = Array.isArray(tags)
+  ? tags.map((tag) => [tag, undefined] as const)
+  : [...tags.entries()];
+---
+
+<div class="tags">
+  {
+    items.map(([tag, count]) => (
+      <a
+        class="tag"
+        href={url(`/tags/${encodeURIComponent(tag)}/`)}
+        aria-current={current === tag ? "page" : undefined}
+      >
+        {tag}
+        {typeof count === "number" ? ` ${count}` : ""}
+      </a>
+    ))
+  }
+</div>

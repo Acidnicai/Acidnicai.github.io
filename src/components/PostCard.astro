@@ -1,0 +1,25 @@
+---
+import type { Post } from "../lib/posts";
+import { topics } from "../site.config";
+import { formatDateShort, url } from "../lib/utils";
+
+interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+const topic = topics[post.data.topic];
+---
+
+<li class="post-card">
+  <a href={url(`/posts/${post.id}/`)}>
+    <h2>{post.data.title}</h2>
+    <p class="post-list__meta">
+      <time datetime={post.data.pubDate.toISOString()}>
+        {formatDateShort(post.data.pubDate)}
+      </time>
+      <span>{topic.name}</span>
+    </p>
+    <p class="post-list__desc">{post.data.description}</p>
+  </a>
+</li>

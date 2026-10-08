@@ -1,0 +1,29 @@
+---
+import Base from "../../layouts/Base.astro";
+import PostCard from "../../components/PostCard.astro";
+import { publishedPosts, postsByYear } from "../../lib/posts";
+
+const posts = await publishedPosts();
+const grouped = postsByYear(posts);
+const years = [...grouped.keys()].sort((a, b) => b - a);
+---
+
+<Base title="全部笔记" description="硬件与数学学习笔记归档">
+  <div class="panel">
+    <h1 class="page-title">全部笔记</h1>
+    <p class="lede">硬件和数学都在这里，共 {posts.length} 篇，按年份排列。</p>
+  </div>
+
+  {
+    years.map((year) => (
+      <section class="year-group feed">
+        <h2>{year}</h2>
+        <ul class="post-list">
+          {grouped.get(year)!.map((post) => (
+            <PostCard post={post} />
+          ))}
+        </ul>
+      </section>
+    ))
+  }
+</Base>

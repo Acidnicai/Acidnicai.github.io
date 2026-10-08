@@ -1,0 +1,37 @@
+---
+import { topics } from "../site.config";
+import { url } from "../lib/utils";
+import ThemeToggle from "./ThemeToggle.astro";
+
+const pathname = Astro.url.pathname.replace(/\/$/, "") || "/";
+
+const links = [
+  { href: url("/"), label: "首页", match: url("/").replace(/\/$/, "") || "/" },
+  ...Object.entries(topics).map(([id, topic]) => ({
+    href: url(`/${id}/`),
+    label: topic.name,
+    match: url(`/${id}`),
+  })),
+  { href: url("/posts/"), label: "全部", match: url("/posts") },
+  { href: url("/about/"), label: "关于", match: url("/about") },
+];
+
+function current(match: string) {
+  return pathname === (match.replace(/\/$/, "") || "/");
+}
+---
+
+<header class="site-header">
+  <div class="wrap site-header__inner">
+    <nav class="nav" aria-label="主导航">
+      {
+        links.map((link) => (
+          <a href={link.href} aria-current={current(link.match) ? "page" : undefined}>
+            {link.label}
+          </a>
+        ))
+      }
+      <ThemeToggle />
+    </nav>
+  </div>
+</header>

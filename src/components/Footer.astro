@@ -1,0 +1,16 @@
+---
+import { site } from "../site.config";
+import { url } from "../lib/utils";
+---
+
+<footer class="cg-dock" aria-label="标题菜单" inert>
+  <nav class="cg-dock__links">
+    <a href={url("/about/")}>关于</a>
+    <a href={url("/posts/")}>全部笔记</a>
+    <a href={url("/tags/")}>标签</a>
+    <a href={url("/rss.xml")}>RSS</a>
+    {site.github && <a href={site.github} rel="me">GitHub</a>}
+  </nav>
+  <a class="cg-dock__logo" href={url("/about/")}>{site.title}</a>
+  <p class="cg-dock__copy">© {new Date().getFullYear()} {site.author}</p>
+</footer>

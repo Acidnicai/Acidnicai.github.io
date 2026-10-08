@@ -1,0 +1,19 @@
+---
+import Base from "../layouts/Base.astro";
+import PostCard from "../components/PostCard.astro";
+import { publishedPosts } from "../lib/posts";
+
+const posts = await publishedPosts();
+const latest = posts.slice(0, 6);
+---
+
+<Base>
+  <section class="feed">
+    <div class="section-title">
+      <h2>最近在学</h2>
+    </div>
+    <ul class="post-list">
+      {latest.map((post) => <PostCard post={post} />)}
+    </ul>
+  </section>
+</Base>
