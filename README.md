@@ -43,8 +43,8 @@ npm run dev
 
 | 文件 | 作用 |
 | --- | --- |
-| `src/site.config.ts` | 全站唯一的手写配置。`site` 是站名、作者、地址、GitHub、评论；`profile` 是关于页的简介、教育、奖项、论文、项目；`topics` 是专栏，目前是 `hardware`（硬件）和 `math`（数学）。新专栏在这里加一项，文章 frontmatter 的 `topic` 用同一个 key |
-| `src/content.config.ts` | 规定一篇文章开头必须有哪些字段：`title`、`description`、`pubDate`、`topic`，以及可选的 `tags`、`updatedDate`、`draft`、`heroImage` |
+| `src/site.config.ts` | 全站唯一的手写配置。`site` 是站名、作者、地址、GitHub、评论；`profile` 是关于页的简介、教育、奖项、论文、项目；`topics` 是专栏，目前是 `hardware`（硬件）、`math`（数学）、`reading`（读本）。`books` 是读本里的书。新专栏或新书在这里加一项，文章 frontmatter 用同一个 key |
+| `src/content.config.ts` | 规定一篇文章开头必须有哪些字段：`title`、`description`、`pubDate`、`topic`，以及可选的 `book`、`chapter`、`tags`、`updatedDate`、`draft`、`heroImage`。`topic: reading` 时必须填 `book` |
 | `src/env.d.ts` | 让编辑器认识 Astro 的类型，没有页面逻辑 |
 | `src/content/blog/*.md` | 文章本身。文件名就是网址，例如 `math-sets-and-belonging.md` 对应 `/posts/math-sets-and-belonging/` |
 
@@ -56,6 +56,8 @@ npm run dev
 | `hardware-zeros-and-ones.md` | 数字电路里的 0 和 1 |
 | `math-sets-and-belonging.md` | 集合、属于、包含 |
 | `math-how-i-take-notes.md` | 数学笔记格式，也是公式写法的例子 |
+| `reading-art-of-electronics-01.md` | 《电子学的艺术》第 1 章的笔记骨架，目前是草稿 |
+| `reading-princeton-calculus-01.md` | 《普林斯顿微积分读本》第 1 章的笔记骨架，目前是草稿 |
 
 ### `src/pages/`：每个文件对应一个网址
 
@@ -135,12 +137,80 @@ draft: false
 
 `topic` 只能填 `site.config.ts` 里已有的 key。`draft: true` 时，本地预览看得到，`npm run build` 不会把它发布出去。
 
-## 发布到 GitHub Pages
+读本按章节写，一章一篇。`book` 用 `books` 里的 key，`chapter` 写章号。下一章复制这一篇，改文件名、标题和 `chapter`。
 
-1. 想要 `https://你的用户名.github.io`，仓库名必须是 `你的用户名.github.io`。
-2. 在 `src/site.config.ts` 里改 `url`。个人主页仓库的 `base` 保持 `/`；项目仓库（例如名叫 Blog）写成 `/Blog/`。
-3. 推送 `main`。
-4. 仓库 **Settings → Pages** 里，Source 选 **GitHub Actions**。
-5. 在 **Actions** 里等 `Deploy to GitHub Pages` 完成。
+```markdown
+---
+title: 电子学的艺术 · 第 2 章
+description: 这一章我怎么理解、哪里卡住，以及习题怎么做。
+pubDate: 2026-10-09
+topic: reading
+book: art-of-electronics
+chapter: 2
+tags:
+  - 电子学的艺术
+draft: true
+---
+
+## 理解
+
+## 难点
+
+## 习题
+
+### 2.1
+```
+
+`book` 目前有两个：`art-of-electronics`（《电子学的艺术》）、`princeton-calculus`（《普林斯顿微积分读本》）。再加一本就在 `src/site.config.ts` 的 `books` 里添一项。读本专栏会按书名把章节排在一起，同一本书里可以用上一章、下一章来回翻。
+
+## 把更新发到 GitHub 上的博客
+
+网站已经接在仓库 [Acidnicai/Acidnicai.github.io](https://github.com/Acidnicai/Acidnicai.github.io)。线上地址是 [https://acidnicai.github.io/](https://acidnicai.github.io/)。
+
+改完文章或配置后，在 `D:\Data\Blog` 里执行：
+
+```powershell
+git add .
+git commit -m "写清这次改了什么"
+git push
+```
+
+`git push` 把 `main` 传到 GitHub。仓库里的 `.github/workflows/deploy.yml` 会自动构建，再发布到 GitHub Pages。到仓库的 **Actions** 页，等名为 **Deploy to GitHub Pages** 的任务变成绿色，刷新网站即可。页面大约还有几分钟缓存。
+
+第一次在这台电脑上提交前，先告诉 Git 用哪个名字。只需做一次：
+
+```powershell
+git config --global user.name "灾区尼采"
+git config --global user.email "166932268+Acidnicai@users.noreply.github.com"
+```
+
+注意这几件事：
+
+- `draft: true` 的文章本地预览看得到，推上去之后正式网站不会出现。
+- `node_modules/`、`dist/`、`.astro/` 已被 `.gitignore` 排除，不要强制加进去。
+- 只推 `main`。这个仓库的 Pages 使用 **GitHub Actions** 构建，不要改回从分支直接发布。
 
 评论是可选项。到 [giscus](https://giscus.app) 用 GitHub Discussions 生成配置，填进 `site.giscus`。留空则文章下不显示评论。
+
+## 更新本机的 Git
+
+这台电脑上的 Git 是便携版，放在 `D:\EPath\git`，命令来自 `D:\EPath\git\cmd`。它不经过 Windows 安装程序，所以要换版本时，下载新的压缩包并换掉这个文件夹。
+
+先看当前版本：
+
+```powershell
+git --version
+```
+
+现在安装的是 `2.56.0.windows.2`。到 [Git for Windows 发布页](https://github.com/git-for-windows/git/releases) 找更新的版本，下载文件名类似 `MinGit-2.xx.x-64-bit.zip` 的 64 位压缩包。不要下 `.exe` 安装包，那个不会装进 `D:\EPath`。
+
+关掉正在使用 Git 的窗口，然后在 PowerShell 里把压缩包换上去。把下面的文件名改成你刚下载的那一个：
+
+```powershell
+Rename-Item D:\EPath\git D:\EPath\git-old
+Expand-Archive -Path "$env:USERPROFILE\Downloads\MinGit-2.xx.x-64-bit.zip" -DestinationPath D:\EPath\git
+git --version
+Remove-Item D:\EPath\git-old -Recurse -Force
+```
+
+`git --version` 显示新版本后，再删掉 `D:\EPath\git-old`。用户环境变量里的 `D:\EPath\git\cmd` 不用改。如果当前窗口仍提示找不到 `git`，关掉窗口再开一个。

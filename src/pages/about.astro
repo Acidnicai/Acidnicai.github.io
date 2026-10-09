@@ -15,16 +15,18 @@ const githubHandle = site.github.replace(/https?:\/\/github.com\//, "");
     <div class="prose markdown-body">
       <h2>这个网站</h2>
       <p>{site.description}</p>
-      <p>目前主要记两件事：</p>
+      <p>目前记这些：</p>
       <ul>
-        <li>
-          <a href={url("/hardware/")}><strong>{topics.hardware.name}</strong></a>
-          — {topics.hardware.description}
-        </li>
-        <li>
-          <a href={url("/math/")}><strong>{topics.math.name}</strong></a>
-          — {topics.math.description}
-        </li>
+        {
+          Object.entries(topics).map(([id, topic]) => (
+            <li>
+              <a href={url(`/${id}/`)}>
+                <strong>{topic.name}</strong>
+              </a>
+              — {topic.description}
+            </li>
+          ))
+        }
       </ul>
       <h2>找到我</h2>
       <ul>

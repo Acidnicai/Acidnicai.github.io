@@ -1,8 +1,8 @@
 ---
 import Base from "../layouts/Base.astro";
 import PostCard from "../components/PostCard.astro";
-import { topics, type TopicId } from "../site.config";
-import { publishedPosts, postsByTopic } from "../lib/posts";
+import { books, topics, type BookId, type TopicId } from "../site.config";
+import { postsByBook, postsByTopic, publishedPosts } from "../lib/posts";
 
 export function getStaticPaths() {
   return (Object.keys(topics) as TopicId[]).map((topic) => ({
@@ -18,6 +18,7 @@ interface Props {
 const { topic } = Astro.props;
 const meta = topics[topic];
 const posts = postsByTopic(await publishedPosts(), topic);
+const bookEntries = Object.entries(books) as [BookId, (typeof books)[BookId]][];
 ---
 
 <Base title={meta.name} description={meta.description}>
@@ -25,7 +26,34 @@ const posts = postsByTopic(await publishedPosts(), topic);
     <h1 class="page-title">{meta.name}</h1>
     <p class="lede">{meta.description} 目前 {posts.length} 篇。</p>
   </div>
-  <ul class="post-list">
-    {posts.map((post) => <PostCard post={post} />)}
-  </ul>
+  {
+    topic === "reading" ? (
+      bookEntries.map(([id, book]) => {
+        const chapters = postsByBook(posts, id);
+        return (
+          <section class="year-group feed" id={id}>
+            <h2>{book.title}</h2>
+            <p class="lede">
+              {book.author}。{book.description}
+            </p>
+            {chapters.length > 0 ? (
+              <ul class="post-list">
+                {chapters.map((post) => (
+                  <PostCard post={post} />
+                ))}
+              </ul>
+            ) : (
+              <p class="lede">这一本还没有章节笔记。</p>
+            )}
+          </section>
+        );
+      })
+    ) : (
+      <ul class="post-list">
+        {posts.map((post) => (
+          <PostCard post={post} />
+        ))}
+      </ul>
+    )
+  }
 </Base>

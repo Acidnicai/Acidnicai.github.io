@@ -4,13 +4,28 @@ import Base from "../../layouts/Base.astro";
 import Giscus from "../../components/Giscus.astro";
 import TagList from "../../components/TagList.astro";
 import Toc from "../../components/Toc.astro";
-import { topics } from "../../site.config";
+import { books, topics } from "../../site.config";
 import { publishedPosts, type Post } from "../../lib/posts";
 import { formatDate, readingTime, url } from "../../lib/utils";
 
 export async function getStaticPaths() {
   const posts = await publishedPosts();
   return posts.map((post) => {
+    if (post.data.book) {
+      const siblings = posts
+        .filter((item) => item.data.book === post.data.book)
+        .sort((a, b) => (a.data.chapter ?? 0) - (b.data.chapter ?? 0));
+      const index = siblings.findIndex((item) => item.id === post.id);
+      return {
+        params: { slug: post.id },
+        props: {
+          post,
+          prev: siblings[index - 1],
+          next: siblings[index + 1],
+        },
+      };
+    }
+
     const siblings = posts.filter((item) => item.data.topic === post.data.topic);
     const index = siblings.findIndex((item) => item.id === post.id);
     return {
@@ -34,6 +49,9 @@ const { post, prev, next } = Astro.props;
 const { Content, headings } = await render(post);
 const minutes = readingTime(post.body ?? "");
 const topic = topics[post.data.topic];
+const book = post.data.book ? books[post.data.book] : undefined;
+const prevLabel = book ? "上一章" : "上一篇";
+const nextLabel = book ? "下一章" : "下一篇";
 ---
 
 <Base title={post.data.title} description={post.data.description} type="article" math>
@@ -44,7 +62,10 @@ const topic = topics[post.data.topic];
     <div class="post__body">
       <h1 class="page-title">{post.data.title}</h1>
       <div class="post__meta">
-        <a class="post-topic" href={url(`/${post.data.topic}/`)}>{topic.name}</a>
+        <a class="post-topic" href={book ? url(`/reading/#${post.data.book}`) : url(`/${post.data.topic}/`)}>
+          {book ? book.title : topic.name}
+        </a>
+        {post.data.chapter && <span>第 {post.data.chapter} 章</span>}
         <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
         <span>{minutes} 分钟阅读</span>
         {post.data.updatedDate && (
@@ -60,7 +81,7 @@ const topic = topics[post.data.topic];
         <div>
           {prev && (
             <a href={url(`/posts/${prev.id}/`)}>
-              <span>上一篇</span>
+              <span>{prevLabel}</span>
               <strong>{prev.data.title}</strong>
             </a>
           )}
@@ -68,7 +89,7 @@ const topic = topics[post.data.topic];
         <div class="post-nav__next">
           {next && (
             <a href={url(`/posts/${next.id}/`)}>
-              <span>下一篇</span>
+              <span>{nextLabel}</span>
               <strong>{next.data.title}</strong>
             </a>
           )}

@@ -1,6 +1,6 @@
 ---
 import type { Post } from "../lib/posts";
-import { topics } from "../site.config";
+import { books, topics } from "../site.config";
 import { formatDateShort, url } from "../lib/utils";
 
 interface Props {
@@ -9,6 +9,7 @@ interface Props {
 
 const { post } = Astro.props;
 const topic = topics[post.data.topic];
+const book = post.data.book ? books[post.data.book] : undefined;
 ---
 
 <li class="post-card">
@@ -18,7 +19,8 @@ const topic = topics[post.data.topic];
       <time datetime={post.data.pubDate.toISOString()}>
         {formatDateShort(post.data.pubDate)}
       </time>
-      <span>{topic.name}</span>
+      <span>{book ? book.title : topic.name}</span>
+      {post.data.chapter && <span>第 {post.data.chapter} 章</span>}
     </p>
     <p class="post-list__desc">{post.data.description}</p>
   </a>

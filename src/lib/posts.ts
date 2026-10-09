@@ -1,5 +1,5 @@
 import { getCollection, type CollectionEntry } from "astro:content";
-import type { TopicId } from "../site.config";
+import type { BookId, TopicId } from "../site.config";
 
 export type Post = CollectionEntry<"blog">;
 
@@ -25,6 +25,16 @@ export function allTags(posts: Post[]): Map<string, number> {
 
 export function postsByTopic(posts: Post[], topic: TopicId): Post[] {
   return posts.filter((post) => post.data.topic === topic);
+}
+
+export function postsByBook(posts: Post[], book: BookId): Post[] {
+  return posts
+    .filter((post) => post.data.book === book)
+    .sort(
+      (a, b) =>
+        (a.data.chapter ?? 0) - (b.data.chapter ?? 0) ||
+        a.data.title.localeCompare(b.data.title, "zh"),
+    );
 }
 
 export function postsByYear(posts: Post[]): Map<number, Post[]> {

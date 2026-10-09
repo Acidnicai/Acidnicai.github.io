@@ -11,11 +11,11 @@ export const site = {
   base: "/",
   title: "灾区尼采的博客",
   author: "李朋宸",
-  description: "硬件与数学的学习笔记。",
+  description: "硬件、数学，以及读过的书。",
   motto: "今天也在电路和公式里，慢慢往前走。",
   lang: "zh-CN",
   github: "https://github.com/Acidnicai",
-  email: "",
+  email: "lipengcheng88@gmail.com",
   twitter: "",
   /**
    * 用 GitHub Discussions 做评论：到 https://giscus.app 生成后填入。
@@ -74,13 +74,13 @@ export const profile = {
   facts: [
     { label: "坐标", value: "辽宁沈阳" },
     { label: "学历", value: "本科" },
-    { label: "在学", value: "硬件 · 数学" },
+    { label: "在学", value: "硬件 · 数学 · 读本" },
   ],
   education: [
     {
       school: "沈阳师范大学",
       degree: "本科",
-      period: "本科在读",
+      period: "",
       major: "",
       note: "",
     },
@@ -115,8 +115,33 @@ export const topics = {
     name: "数学",
     description: "定义、直觉、证明，还有做错过的题。",
   },
+  reading: {
+    name: "读本",
+    description: "读过的书：每一章的理解、难点，以及习题解答。",
+  },
 } as const;
 
 export type TopicId = keyof typeof topics;
 const topicIds = Object.keys(topics) as [TopicId, ...TopicId[]];
 export const topicIdSchema = topicIds;
+
+/**
+ * 读本专栏里的书。新开一本就在这里加一项，
+ * 文章 frontmatter 的 book 用同一个 key，chapter 写第几章。
+ */
+export const books = {
+  "art-of-electronics": {
+    title: "电子学的艺术",
+    author: "霍罗维茨、希尔",
+    description: "按章节记电路是怎么读懂的，以及习题怎么做。",
+  },
+  "princeton-calculus": {
+    title: "普林斯顿微积分读本",
+    author: "阿德里安·巴纳",
+    description: "按章节记定义和图像怎么对上，以及习题怎么做。",
+  },
+} as const;
+
+export type BookId = keyof typeof books;
+const bookIds = Object.keys(books) as [BookId, ...BookId[]];
+export const bookIdSchema = bookIds;
