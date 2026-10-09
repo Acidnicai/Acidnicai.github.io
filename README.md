@@ -163,19 +163,28 @@ draft: true
 
 `book` 目前有两个：`art-of-electronics`（《电子学的艺术》）、`princeton-calculus`（《普林斯顿微积分读本》）。再加一本就在 `src/site.config.ts` 的 `books` 里添一项。读本专栏会按书名把章节排在一起，同一本书里可以用上一章、下一章来回翻。
 
-## 把更新发到 GitHub 上的博客
+## 更新 acidnicai.github.io
 
-网站已经接在仓库 [Acidnicai/Acidnicai.github.io](https://github.com/Acidnicai/Acidnicai.github.io)。线上地址是 [https://acidnicai.github.io/](https://acidnicai.github.io/)。
+线上网站是 [https://acidnicai.github.io/](https://acidnicai.github.io/)，对应仓库 [Acidnicai/Acidnicai.github.io](https://github.com/Acidnicai/Acidnicai.github.io) 的 `main` 分支。只有 `main` 被推上去，GitHub Actions 才会按 `.github/workflows/deploy.yml` 重新构建并发布。在别的分支上 `git push`，网站不会变。
 
-改完文章或配置后，在 `D:\Data\Blog` 里执行：
+在 `D:\Data\Blog` 里改完文章或配置后：
 
 ```powershell
+git checkout main
 git add .
 git commit -m "写清这次改了什么"
-git push
+git push origin main
 ```
 
-`git push` 把 `main` 传到 GitHub。仓库里的 `.github/workflows/deploy.yml` 会自动构建，再发布到 GitHub Pages。到仓库的 **Actions** 页，等名为 **Deploy to GitHub Pages** 的任务变成绿色，刷新网站即可。页面大约还有几分钟缓存。
+如果改动先写在别的分支上，先合并再推 `main`：
+
+```powershell
+git checkout main
+git merge 那个分支的名字
+git push origin main
+```
+
+然后打开 [Actions](https://github.com/Acidnicai/Acidnicai.github.io/actions)，等 **Deploy to GitHub Pages** 变成绿色，再刷新网站。页面大约还有几分钟缓存。
 
 第一次在这台电脑上提交前，先告诉 Git 用哪个名字。只需做一次：
 
@@ -188,7 +197,7 @@ git config --global user.email "166932268+Acidnicai@users.noreply.github.com"
 
 - `draft: true` 的文章本地预览看得到，推上去之后正式网站不会出现。
 - `node_modules/`、`dist/`、`.astro/` 已被 `.gitignore` 排除，不要强制加进去。
-- 只推 `main`。这个仓库的 Pages 使用 **GitHub Actions** 构建，不要改回从分支直接发布。
+- 这个仓库的 Pages 使用 **GitHub Actions** 构建，不要改回从分支直接发布。
 
 评论是可选项。到 [giscus](https://giscus.app) 用 GitHub Discussions 生成配置，填进 `site.giscus`。留空则文章下不显示评论。
 
