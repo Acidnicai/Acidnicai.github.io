@@ -1,0 +1,426 @@
+---
+import type { WordEntry } from "../lib/words";
+
+interface Props {
+  entries: WordEntry[];
+}
+
+const { entries } = Astro.props;
+const payload = JSON.stringify(entries);
+---
+
+<div class="word-book" data-word-book>
+  <pre hidden data-word-payload>{payload}</pre>
+
+  <div class="word-book__modes" role="tablist" aria-label="词本">
+    <button type="button" role="tab" data-word-mode="list" aria-selected="true">词表</button>
+    <button type="button" role="tab" data-word-mode="drill" aria-selected="false">背单词</button>
+  </div>
+
+  <div data-word-panel="list">
+    <form class="book-search" role="search" data-word-search>
+      <label for="word-q">查找词条</label>
+      <input
+        id="word-q"
+        type="search"
+        name="q"
+        placeholder="词、句子或场面"
+        autocomplete="off"
+        enterkeyhint="search"
+      />
+    </form>
+    <p class="section-note" data-word-empty hidden>没有找到对应的词条。</p>
+    <ul class="word-list">
+      {
+        entries.map((entry) => {
+          const haystack = [
+            entry.word,
+            entry.note,
+            entry.group,
+            entry.groupNote,
+            ...entry.senses.flatMap((sense) => [sense.example, sense.scene]),
+          ]
+            .filter(Boolean)
+            .join(" ");
+          return (
+            <li class="word-card" data-word-entry data-search={haystack}>
+              <header class="word-card__head">
+                <h2 class="word-card__word">{entry.word}</h2>
+                {entry.group && (
+                  <p class="word-card__meta">{entry.group.replace(/-/g, " / ")}</p>
+                )}
+                <p class="word-card__meta">{entry.senses.length} 个场面</p>
+              </header>
+              <ul class="word-card__senses">
+                {entry.senses.map((sense) => (
+                  <li class="word-slip">
+                    <p class="word-card__example">{sense.example}</p>
+                    <p class="word-card__scene">{sense.scene}</p>
+                  </li>
+                ))}
+              </ul>
+              {entry.note && <p class="word-card__note">{entry.note}</p>}
+              {entry.groupNote && <p class="word-card__note">{entry.groupNote}</p>}
+            </li>
+          );
+        })
+      }
+    </ul>
+    <p class="word-book__foot">新词写在 src/content/words/，照 play.md 抄一条。</p>
+  </div>
+
+  <div data-word-panel="drill" hidden>
+    <article class="word-card word-card--drill" data-drill-card data-face="front">
+      <p class="word-card__flash" data-drill-flash hidden aria-live="polite"></p>
+      <p class="word-card__kicker" data-drill-status></p>
+      <p class="word-card__example word-card__example--drill" data-drill-example></p>
+      <div class="word-card__back" data-drill-back hidden>
+        <p class="word-card__kicker">场面</p>
+        <p class="word-card__lemma" data-drill-word></p>
+        <p class="word-card__scene word-card__scene--open" data-drill-scene></p>
+        <div class="word-card__more" data-drill-more></div>
+      </div>
+      <p class="word-card__done" data-drill-done hidden>这一轮过完了。</p>
+      <div class="word-card__actions">
+        <button type="button" class="word-card__btn word-card__btn--primary" data-drill-reveal>
+          看场面
+        </button>
+        <button type="button" class="word-card__btn" data-drill-again hidden>还要再看</button>
+        <button type="button" class="word-card__btn word-card__btn--know" data-drill-know hidden>
+          这回想起了
+        </button>
+        <button type="button" class="word-card__btn" data-drill-all hidden>全部再来</button>
+      </div>
+    </article>
+  </div>
+</div>
+
+<script>
+  type Sense = { example: string; scene: string };
+  type Entry = {
+    id: string;
+    word: string;
+    group?: string;
+    groupNote?: string;
+    note?: string;
+    senses: Sense[];
+  };
+  type Item = {
+    id: string;
+    word: string;
+    example: string;
+    scene: string;
+    note?: string;
+    group?: string;
+    groupNote?: string;
+    otherSenses: Sense[];
+    related: { word: string; example: string; scene: string }[];
+  };
+
+  const root = document.querySelector("[data-word-book]");
+  const payloadNode = document.querySelector("[data-word-payload]");
+  if (root instanceof HTMLElement && payloadNode instanceof HTMLElement) {
+    const entries = JSON.parse(payloadNode.textContent || "[]") as Entry[];
+    const WARM_KEY = "english-word-warm";
+
+    function readWarm(): Set<string> {
+      try {
+        const raw = JSON.parse(localStorage.getItem(WARM_KEY) || "[]");
+        return new Set(Array.isArray(raw) ? raw.filter((id) => typeof id === "string") : []);
+      } catch {
+        return new Set();
+      }
+    }
+
+    function writeWarm(warm: Set<string>) {
+      localStorage.setItem(WARM_KEY, JSON.stringify([...warm]));
+    }
+
+    function buildItems(): Item[] {
+      const items: Item[] = [];
+      for (const entry of entries) {
+        entry.senses.forEach((sense, index) => {
+          const related: Item["related"] = [];
+          if (entry.group) {
+            for (const other of entries) {
+              if (other.id === entry.id || other.group !== entry.group) continue;
+              for (const otherSense of other.senses) {
+                related.push({
+                  word: other.word,
+                  example: otherSense.example,
+                  scene: otherSense.scene,
+                });
+              }
+            }
+          }
+          items.push({
+            id: `${entry.id}:${index}`,
+            word: entry.word,
+            example: sense.example,
+            scene: sense.scene,
+            note: entry.note,
+            group: entry.group,
+            groupNote: entry.groupNote,
+            otherSenses: entry.senses.filter((_, i) => i !== index),
+            related,
+          });
+        });
+      }
+      return items;
+    }
+
+    function shuffle<T>(list: T[]): T[] {
+      const next = [...list];
+      for (let i = next.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [next[i], next[j]] = [next[j], next[i]];
+      }
+      return next;
+    }
+
+    function escapeHtml(value: string) {
+      return value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function emphasize(example: string, word: string) {
+      const escaped = word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const pattern = new RegExp(`\\b${escaped}(?:ed|ing|s|es)?\\b`, "gi");
+      const safe = escapeHtml(example);
+      return safe.replace(pattern, (matched) => `<em>${matched}</em>`);
+    }
+
+    const allItems = buildItems();
+    let pile: Item[] = [];
+    let revealed = false;
+    let skippedWarm = 0;
+    let locked = false;
+    let flashTimer = 0;
+    let roundTotal = 0;
+
+    const listPanel = root.querySelector("[data-word-panel='list']");
+    const drillPanel = root.querySelector("[data-word-panel='drill']");
+    const searchForm = root.querySelector("[data-word-search]");
+    const searchInput = searchForm?.querySelector("input");
+    const empty = root.querySelector("[data-word-empty]");
+    const status = root.querySelector("[data-drill-status]");
+    const exampleEl = root.querySelector("[data-drill-example]");
+    const wordEl = root.querySelector("[data-drill-word]");
+    const sceneEl = root.querySelector("[data-drill-scene]");
+    const moreEl = root.querySelector("[data-drill-more]");
+    const backEl = root.querySelector("[data-drill-back]");
+    const doneEl = root.querySelector("[data-drill-done]");
+    const cardEl = root.querySelector("[data-drill-card]");
+    const flashEl = root.querySelector("[data-drill-flash]");
+    const btnReveal = root.querySelector("[data-drill-reveal]");
+    const btnAgain = root.querySelector("[data-drill-again]");
+    const btnKnow = root.querySelector("[data-drill-know]");
+    const btnAll = root.querySelector("[data-drill-all]");
+
+    function current(): Item | undefined {
+      return pile[0];
+    }
+
+    function setMode(mode: "list" | "drill") {
+      for (const btn of root.querySelectorAll("[data-word-mode]")) {
+        btn.setAttribute("aria-selected", btn.getAttribute("data-word-mode") === mode ? "true" : "false");
+      }
+      if (listPanel instanceof HTMLElement) listPanel.hidden = mode !== "list";
+      if (drillPanel instanceof HTMLElement) drillPanel.hidden = mode !== "drill";
+      if (mode === "drill") startDrill(false);
+    }
+
+    function startDrill(includeWarm: boolean) {
+      window.clearTimeout(flashTimer);
+      locked = false;
+      const warm = readWarm();
+      const source = includeWarm ? allItems : allItems.filter((item) => !warm.has(item.id));
+      skippedWarm = includeWarm ? 0 : allItems.length - source.length;
+      pile = shuffle(source);
+      roundTotal = pile.length;
+      revealed = false;
+      if (cardEl instanceof HTMLElement) cardEl.dataset.flash = "";
+      if (flashEl instanceof HTMLElement) {
+        flashEl.hidden = true;
+        flashEl.textContent = "";
+      }
+      renderDrill();
+    }
+
+    function renderDrill() {
+      const item = current();
+      const hasItem = Boolean(item);
+      if (cardEl instanceof HTMLElement) {
+        cardEl.dataset.face = !hasItem ? "done" : revealed ? "open" : "front";
+      }
+      if (exampleEl instanceof HTMLElement) exampleEl.hidden = !hasItem;
+      if (backEl instanceof HTMLElement) backEl.hidden = !hasItem || !revealed;
+      if (doneEl instanceof HTMLElement) doneEl.hidden = hasItem;
+      if (btnReveal instanceof HTMLButtonElement) btnReveal.hidden = !hasItem || revealed;
+      if (btnAgain instanceof HTMLButtonElement) btnAgain.hidden = !hasItem || !revealed;
+      if (btnKnow instanceof HTMLButtonElement) btnKnow.hidden = !hasItem || !revealed;
+      if (btnAll instanceof HTMLButtonElement) {
+        btnAll.hidden = hasItem && skippedWarm === 0;
+        btnAll.textContent = hasItem ? "全部再来" : "再来一轮";
+      }
+
+      if (status instanceof HTMLElement) {
+        if (!hasItem && allItems.length === 0) {
+          status.textContent = "词本还是空的。";
+        } else if (!hasItem) {
+          status.textContent =
+            skippedWarm > 0
+              ? `没有还没熟的句子了。上次点过「想起了」的有 ${skippedWarm} 句。`
+              : "这一轮的句子都过完了。";
+        } else if (revealed) {
+          const n = roundTotal - pile.length + 1;
+          status.textContent = `第 ${n} / ${roundTotal} 句 · 已翻开`;
+        } else {
+          const n = roundTotal - pile.length + 1;
+          const skip = skippedWarm > 0 ? ` · 跳过 ${skippedWarm} 句熟的` : "";
+          status.textContent = `第 ${n} / ${roundTotal} 句 · 先看句子${skip}`;
+        }
+      }
+
+      if (
+        !item ||
+        !(exampleEl instanceof HTMLElement) ||
+        !(wordEl instanceof HTMLElement) ||
+        !(sceneEl instanceof HTMLElement) ||
+        !(moreEl instanceof HTMLElement)
+      ) {
+        return;
+      }
+
+      exampleEl.innerHTML = emphasize(item.example, item.word);
+      wordEl.textContent = item.word;
+      sceneEl.textContent = item.scene;
+
+      const bits: string[] = [];
+      if (item.note) bits.push(`<p>${escapeHtml(item.note)}</p>`);
+      if (item.otherSenses.length > 0) {
+        bits.push(`<p class="word-card__kicker">这个词还有这些场面</p>`);
+        bits.push(
+          `<ul class="word-card__senses">${item.otherSenses
+            .map(
+              (sense) =>
+                `<li class="word-slip"><p class="word-card__example">${emphasize(sense.example, item.word)}</p><p class="word-card__scene">${escapeHtml(sense.scene)}</p></li>`,
+            )
+            .join("")}</ul>`,
+        );
+      }
+      if (item.related.length > 0) {
+        bits.push(`<p class="word-card__kicker">近义</p>`);
+        if (item.groupNote) bits.push(`<p class="word-card__note">${escapeHtml(item.groupNote)}</p>`);
+        bits.push(
+          `<ul class="word-card__senses">${item.related
+            .map(
+              (rel) =>
+                `<li class="word-slip"><p class="word-card__meta">${escapeHtml(rel.word)}</p><p class="word-card__example">${emphasize(rel.example, rel.word)}</p><p class="word-card__scene">${escapeHtml(rel.scene)}</p></li>`,
+            )
+            .join("")}</ul>`,
+        );
+      }
+      moreEl.innerHTML = bits.join("");
+    }
+
+    function reveal() {
+      if (!current() || revealed || locked) return;
+      revealed = true;
+      if (cardEl instanceof HTMLElement) cardEl.dataset.face = "open";
+      renderDrill();
+    }
+
+    function answer(known: boolean) {
+      const item = current();
+      if (!item || !revealed || locked) return;
+      locked = true;
+      const warm = readWarm();
+      if (known) warm.add(item.id);
+      else warm.delete(item.id);
+      writeWarm(warm);
+      pile.shift();
+      if (!known) pile.push(item);
+
+      if (cardEl instanceof HTMLElement) cardEl.dataset.flash = known ? "know" : "again";
+      if (flashEl instanceof HTMLElement) {
+        flashEl.hidden = false;
+        flashEl.textContent = known ? "这回想起了，这句先放下。" : "还要再看，收回队尾。";
+      }
+      if (btnAgain instanceof HTMLButtonElement) btnAgain.hidden = true;
+      if (btnKnow instanceof HTMLButtonElement) btnKnow.hidden = true;
+
+      window.clearTimeout(flashTimer);
+      flashTimer = window.setTimeout(() => {
+        locked = false;
+        revealed = false;
+        if (cardEl instanceof HTMLElement) cardEl.dataset.flash = "";
+        if (flashEl instanceof HTMLElement) {
+          flashEl.hidden = true;
+          flashEl.textContent = "";
+        }
+        renderDrill();
+      }, 420);
+    }
+
+    function filterList() {
+      if (!(searchInput instanceof HTMLInputElement) || !(empty instanceof HTMLElement)) return;
+      const query = searchInput.value.toLowerCase().replace(/\s+/g, "");
+      let visible = 0;
+      for (const node of root.querySelectorAll<HTMLElement>("[data-word-entry]")) {
+        const haystack = (node.dataset.search ?? "").toLowerCase().replace(/\s+/g, "");
+        const show = query.length === 0 || haystack.includes(query);
+        node.hidden = !show;
+        if (show) visible += 1;
+      }
+      empty.hidden = visible > 0;
+    }
+
+    root.addEventListener("click", (event) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      const modeBtn = target.closest("[data-word-mode]");
+      if (modeBtn instanceof HTMLButtonElement) {
+        const mode = modeBtn.dataset.wordMode;
+        if (mode === "list" || mode === "drill") setMode(mode);
+        return;
+      }
+      if (target.closest("[data-drill-reveal]")) {
+        reveal();
+        return;
+      }
+      if (target.closest("[data-drill-again]")) {
+        answer(false);
+        return;
+      }
+      if (target.closest("[data-drill-know]")) {
+        answer(true);
+        return;
+      }
+      if (target.closest("[data-drill-all]")) {
+        startDrill(true);
+        return;
+      }
+      if (target.closest("[data-drill-card]") && !revealed && !locked) reveal();
+    });
+
+    searchForm?.addEventListener("submit", (event) => {
+      event.preventDefault();
+      filterList();
+    });
+    searchInput?.addEventListener("input", filterList);
+
+    root.addEventListener("keydown", (event) => {
+      if (drillPanel instanceof HTMLElement && drillPanel.hidden) return;
+      if (event.key === "Enter" || event.key === " ") {
+        const tag = event.target instanceof HTMLElement ? event.target.tagName : "";
+        if (tag === "BUTTON" || tag === "INPUT") return;
+        event.preventDefault();
+        if (!revealed) reveal();
+      }
+    });
+  }
+</script>

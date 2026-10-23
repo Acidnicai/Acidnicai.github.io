@@ -1,0 +1,19 @@
+---
+import { rowsOf } from "../lib/pixels";
+
+interface Props {
+  art: string;
+  palette: Record<string, string>;
+}
+
+const { art, palette } = Astro.props;
+const rows = rowsOf(art);
+---
+
+{
+  rows.map((row, y) =>
+    [...row].map((ch, x) =>
+      palette[ch] ? <rect x={x} y={y} width="1" height="1" fill={palette[ch]} /> : null,
+    ),
+  )
+}

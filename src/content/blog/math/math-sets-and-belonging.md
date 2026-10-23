@@ -18,7 +18,7 @@ tags:
 
 $x \in A$ 读作「$x$ 是 $A$ 的元素」。它说的是**一个对象**和**一个集合**的关系。
 
-$x \notin A$ 则是「不是」。
+$x \notin A$ 则表示「不是 $A$ 的元素」。
 
 ## 包含
 
@@ -28,6 +28,6 @@ $$
 A \subseteq B \iff \forall x,\ (x \in A \Rightarrow x \in B)
 $$
 
-容易混的地方：$3 \in \mathbb{N}$ 成立，$3 \subseteq \mathbb{N}$ 一般不这么写，因为 $3$ 不是集合。
+容易混的地方：$3 \in \mathbb{N}$ 成立；但 $3 \subseteq \mathbb{N}$ 一般不这么写，因为 $3$ 不是集合。
 
 下一篇会接到函数：把「对应规则」写成 $f: A \to B$。

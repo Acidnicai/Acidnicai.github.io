@@ -1,0 +1,564 @@
+---
+import Pixel from "./Pixel.astro";
+import { sizeOf } from "../lib/pixels";
+import {
+  anglerArt,
+  dolphinArt,
+  turtleArt,
+  mantaArt,
+  sharkArt,
+  wallArt,
+  dripArt,
+  archArt,
+  bergArt,
+  boatArt,
+  cloudArt,
+  columnArt,
+  columnShortArt,
+  coralArt,
+  coralBArt,
+  crystalArt,
+  brinicleArt,
+  crevasseArt,
+  floeArt,
+  algaeArt,
+  icefishArt,
+  sealArt,
+  angelArt,
+  krillArt,
+  pressureArt,
+  diverArt,
+  fishArt,
+  fishBArt,
+  fishCArt,
+  gullArt,
+  jellyArt,
+  kelpArt,
+  stalkArt,
+  canopyArt,
+  boulderArt,
+  pinnacleArt,
+  urchinArt,
+  otterArt,
+  garibaldiArt,
+  starArt,
+  matArt,
+  musselArt,
+  brazierArt,
+  colonnadeArt,
+  crabArt,
+  domeArt,
+  mosaicArt,
+  pal,
+  plazaArt,
+  stairsArt,
+  statueArt,
+  templeArt,
+  sunArt,
+  ventArt,
+  waveArt,
+  wormArt,
+  shrimpArt,
+  eelArt,
+  basaltArt,
+  ridgeArt,
+} from "../lib/pixel-art";
+
+const box = sizeOf;
+const boat = box(boatArt);
+const fish = box(fishArt);
+const fishB = box(fishBArt);
+const fishC = box(fishCArt);
+const jelly = box(jellyArt);
+const diver = box(diverArt);
+const angler = box(anglerArt);
+const dolphin = box(dolphinArt);
+const turtle = box(turtleArt);
+const manta = box(mantaArt);
+const shark = box(sharkArt);
+const wall = box(wallArt);
+const drip = box(dripArt);
+const kelp = box(kelpArt);
+const stalk = box(stalkArt);
+const canopy = box(canopyArt);
+const boulder = box(boulderArt);
+const pinnacle = box(pinnacleArt);
+const urchin = box(urchinArt);
+const otter = box(otterArt);
+const garibaldi = box(garibaldiArt);
+const star = box(starArt);
+const coral = box(coralArt);
+const coralB = box(coralBArt);
+const berg = box(bergArt);
+const crystal = box(crystalArt);
+const brinicle = box(brinicleArt);
+const crevasse = box(crevasseArt);
+const floe = box(floeArt);
+const algae = box(algaeArt);
+const icefish = box(icefishArt);
+const seal = box(sealArt);
+const angel = box(angelArt);
+const krill = box(krillArt);
+const pressure = box(pressureArt);
+const vent = box(ventArt);
+const worm = box(wormArt);
+const shrimp = box(shrimpArt);
+const crab = box(crabArt);
+const eel = box(eelArt);
+const mussel = box(musselArt);
+const basalt = box(basaltArt);
+const ridge = box(ridgeArt);
+const mat = box(matArt);
+const column = box(columnArt);
+const columnShort = box(columnShortArt);
+const arch = box(archArt);
+const mosaic = box(mosaicArt);
+const temple = box(templeArt);
+const colonnade = box(colonnadeArt);
+const statue = box(statueArt);
+const dome = box(domeArt);
+const stairs = box(stairsArt);
+const brazier = box(brazierArt);
+const plaza = box(plazaArt);
+const sun = box(sunArt);
+const cloud = box(cloudArt);
+const wave = box(waveArt);
+const gull = box(gullArt);
+---
+
+<div class="page-bg" aria-hidden="true">
+  <div class="sea">
+    <div class="sea__water"></div>
+    <svg class="sea__sun" viewBox={`0 0 ${sun.w} ${sun.h}`} aria-hidden="true">
+      <Pixel art={sunArt} palette={pal} />
+    </svg>
+    <svg class="cloud cloud--1" viewBox={`0 0 ${cloud.w} ${cloud.h}`} aria-hidden="true">
+      <Pixel art={cloudArt} palette={pal} />
+    </svg>
+    <svg class="cloud cloud--2" viewBox={`0 0 ${cloud.w} ${cloud.h}`} aria-hidden="true">
+      <Pixel art={cloudArt} palette={pal} />
+    </svg>
+    <svg class="cloud cloud--3" viewBox={`0 0 ${cloud.w} ${cloud.h}`} aria-hidden="true">
+      <Pixel art={cloudArt} palette={pal} />
+    </svg>
+    <svg class="gull gull--1" viewBox={`0 0 ${gull.w} ${gull.h}`} aria-hidden="true">
+      <Pixel art={gullArt} palette={pal} />
+    </svg>
+    <svg class="gull gull--2" viewBox={`0 0 ${gull.w} ${gull.h}`} aria-hidden="true">
+      <Pixel art={gullArt} palette={pal} />
+    </svg>
+    <div class="sea__rays"></div>
+    <svg
+      class="sea__wave"
+      viewBox={`0 0 ${wave.w * 48} ${wave.h}`}
+      preserveAspectRatio="xMidYMid slice"
+      aria-hidden="true"
+    >
+      {
+        Array.from({ length: 48 }, (_, index) => (
+          <g transform={`translate(${index * wave.w} 0)`}>
+            <Pixel art={waveArt} palette={pal} />
+          </g>
+        ))
+      }
+    </svg>
+
+    <svg class="boat" viewBox={`0 0 ${boat.w} ${boat.h}`} aria-hidden="true">
+      <Pixel art={boatArt} palette={pal} />
+    </svg>
+
+    <svg class="sea__sheet" width="0" height="0" aria-hidden="true">
+      <defs>
+        <symbol id="px-fish" viewBox={`0 0 ${fish.w} ${fish.h}`}>
+          <Pixel art={fishArt} palette={pal} />
+        </symbol>
+        <symbol id="px-fish-b" viewBox={`0 0 ${fishB.w} ${fishB.h}`}>
+          <Pixel art={fishBArt} palette={pal} />
+        </symbol>
+        <symbol id="px-fish-c" viewBox={`0 0 ${fishC.w} ${fishC.h}`}>
+          <Pixel art={fishCArt} palette={pal} />
+        </symbol>
+        <symbol id="px-jelly" viewBox={`0 0 ${jelly.w} ${jelly.h}`}>
+          <Pixel art={jellyArt} palette={pal} />
+        </symbol>
+        <symbol id="px-diver" viewBox={`0 0 ${diver.w} ${diver.h}`}>
+          <Pixel art={diverArt} palette={pal} />
+        </symbol>
+        <symbol id="px-angler" viewBox={`0 0 ${angler.w} ${angler.h}`}>
+          <Pixel art={anglerArt} palette={pal} />
+        </symbol>
+        <symbol id="px-dolphin" viewBox={`0 0 ${dolphin.w} ${dolphin.h}`}>
+          <Pixel art={dolphinArt} palette={pal} />
+        </symbol>
+        <symbol id="px-turtle" viewBox={`0 0 ${turtle.w} ${turtle.h}`}>
+          <Pixel art={turtleArt} palette={pal} />
+        </symbol>
+        <symbol id="px-manta" viewBox={`0 0 ${manta.w} ${manta.h}`}>
+          <Pixel art={mantaArt} palette={pal} />
+        </symbol>
+        <symbol id="px-shark" viewBox={`0 0 ${shark.w} ${shark.h}`}>
+          <Pixel art={sharkArt} palette={pal} />
+        </symbol>
+        <symbol id="px-wall" viewBox={`0 0 ${wall.w} ${wall.h}`}>
+          <Pixel art={wallArt} palette={pal} />
+        </symbol>
+        <symbol id="px-drip" viewBox={`0 0 ${drip.w} ${drip.h}`}>
+          <Pixel art={dripArt} palette={pal} />
+        </symbol>
+        <symbol id="px-kelp" viewBox={`0 0 ${kelp.w} ${kelp.h}`}>
+          <Pixel art={kelpArt} palette={pal} />
+        </symbol>
+        <symbol id="px-stalk" viewBox={`0 0 ${stalk.w} ${stalk.h}`}>
+          <Pixel art={stalkArt} palette={pal} />
+        </symbol>
+        <symbol id="px-canopy" viewBox={`0 0 ${canopy.w} ${canopy.h}`}>
+          <Pixel art={canopyArt} palette={pal} />
+        </symbol>
+        <symbol id="px-boulder" viewBox={`0 0 ${boulder.w} ${boulder.h}`}>
+          <Pixel art={boulderArt} palette={pal} />
+        </symbol>
+        <symbol id="px-pinnacle" viewBox={`0 0 ${pinnacle.w} ${pinnacle.h}`}>
+          <Pixel art={pinnacleArt} palette={pal} />
+        </symbol>
+        <symbol id="px-urchin" viewBox={`0 0 ${urchin.w} ${urchin.h}`}>
+          <Pixel art={urchinArt} palette={pal} />
+        </symbol>
+        <symbol id="px-otter" viewBox={`0 0 ${otter.w} ${otter.h}`}>
+          <Pixel art={otterArt} palette={pal} />
+        </symbol>
+        <symbol id="px-garibaldi" viewBox={`0 0 ${garibaldi.w} ${garibaldi.h}`}>
+          <Pixel art={garibaldiArt} palette={pal} />
+        </symbol>
+        <symbol id="px-star" viewBox={`0 0 ${star.w} ${star.h}`}>
+          <Pixel art={starArt} palette={pal} />
+        </symbol>
+        <symbol id="px-coral" viewBox={`0 0 ${coral.w} ${coral.h}`}>
+          <Pixel art={coralArt} palette={pal} />
+        </symbol>
+        <symbol id="px-coral-b" viewBox={`0 0 ${coralB.w} ${coralB.h}`}>
+          <Pixel art={coralBArt} palette={pal} />
+        </symbol>
+        <symbol id="px-berg" viewBox={`0 0 ${berg.w} ${berg.h}`}>
+          <Pixel art={bergArt} palette={pal} />
+        </symbol>
+        <symbol id="px-crystal" viewBox={`0 0 ${crystal.w} ${crystal.h}`}>
+          <Pixel art={crystalArt} palette={pal} />
+        </symbol>
+        <symbol id="px-brinicle" viewBox={`0 0 ${brinicle.w} ${brinicle.h}`}>
+          <Pixel art={brinicleArt} palette={pal} />
+        </symbol>
+        <symbol id="px-crevasse" viewBox={`0 0 ${crevasse.w} ${crevasse.h}`}>
+          <Pixel art={crevasseArt} palette={pal} />
+        </symbol>
+        <symbol id="px-floe" viewBox={`0 0 ${floe.w} ${floe.h}`}>
+          <Pixel art={floeArt} palette={pal} />
+        </symbol>
+        <symbol id="px-algae" viewBox={`0 0 ${algae.w} ${algae.h}`}>
+          <Pixel art={algaeArt} palette={pal} />
+        </symbol>
+        <symbol id="px-icefish" viewBox={`0 0 ${icefish.w} ${icefish.h}`}>
+          <Pixel art={icefishArt} palette={pal} />
+        </symbol>
+        <symbol id="px-seal" viewBox={`0 0 ${seal.w} ${seal.h}`}>
+          <Pixel art={sealArt} palette={pal} />
+        </symbol>
+        <symbol id="px-angel" viewBox={`0 0 ${angel.w} ${angel.h}`}>
+          <Pixel art={angelArt} palette={pal} />
+        </symbol>
+        <symbol id="px-krill" viewBox={`0 0 ${krill.w} ${krill.h}`}>
+          <Pixel art={krillArt} palette={pal} />
+        </symbol>
+        <symbol id="px-pressure" viewBox={`0 0 ${pressure.w} ${pressure.h}`}>
+          <Pixel art={pressureArt} palette={pal} />
+        </symbol>
+        <symbol id="px-vent" viewBox={`0 0 ${vent.w} ${vent.h}`}>
+          <Pixel art={ventArt} palette={pal} />
+        </symbol>
+        <symbol id="px-worm" viewBox={`0 0 ${worm.w} ${worm.h}`}>
+          <Pixel art={wormArt} palette={pal} />
+        </symbol>
+        <symbol id="px-shrimp" viewBox={`0 0 ${shrimp.w} ${shrimp.h}`}>
+          <Pixel art={shrimpArt} palette={pal} />
+        </symbol>
+        <symbol id="px-crab" viewBox={`0 0 ${crab.w} ${crab.h}`}>
+          <Pixel art={crabArt} palette={pal} />
+        </symbol>
+        <symbol id="px-eel" viewBox={`0 0 ${eel.w} ${eel.h}`}>
+          <Pixel art={eelArt} palette={pal} />
+        </symbol>
+        <symbol id="px-mussel" viewBox={`0 0 ${mussel.w} ${mussel.h}`}>
+          <Pixel art={musselArt} palette={pal} />
+        </symbol>
+        <symbol id="px-basalt" viewBox={`0 0 ${basalt.w} ${basalt.h}`}>
+          <Pixel art={basaltArt} palette={pal} />
+        </symbol>
+        <symbol id="px-ridge" viewBox={`0 0 ${ridge.w} ${ridge.h}`}>
+          <Pixel art={ridgeArt} palette={pal} />
+        </symbol>
+        <symbol id="px-column" viewBox={`0 0 ${column.w} ${column.h}`}>
+          <Pixel art={columnArt} palette={pal} />
+        </symbol>
+        <symbol id="px-column-short" viewBox={`0 0 ${columnShort.w} ${columnShort.h}`}>
+          <Pixel art={columnShortArt} palette={pal} />
+        </symbol>
+        <symbol id="px-arch" viewBox={`0 0 ${arch.w} ${arch.h}`}>
+          <Pixel art={archArt} palette={pal} />
+        </symbol>
+        <symbol id="px-mosaic" viewBox={`0 0 ${mosaic.w} ${mosaic.h}`}>
+          <Pixel art={mosaicArt} palette={pal} />
+        </symbol>
+        <symbol id="px-temple" viewBox={`0 0 ${temple.w} ${temple.h}`}>
+          <Pixel art={templeArt} palette={pal} />
+        </symbol>
+        <symbol id="px-colonnade" viewBox={`0 0 ${colonnade.w} ${colonnade.h}`}>
+          <Pixel art={colonnadeArt} palette={pal} />
+        </symbol>
+        <symbol id="px-statue" viewBox={`0 0 ${statue.w} ${statue.h}`}>
+          <Pixel art={statueArt} palette={pal} />
+        </symbol>
+        <symbol id="px-dome" viewBox={`0 0 ${dome.w} ${dome.h}`}>
+          <Pixel art={domeArt} palette={pal} />
+        </symbol>
+        <symbol id="px-stairs" viewBox={`0 0 ${stairs.w} ${stairs.h}`}>
+          <Pixel art={stairsArt} palette={pal} />
+        </symbol>
+        <symbol id="px-brazier" viewBox={`0 0 ${brazier.w} ${brazier.h}`}>
+          <Pixel art={brazierArt} palette={pal} />
+        </symbol>
+        <symbol id="px-plaza" viewBox={`0 0 ${plaza.w} ${plaza.h}`}>
+          <Pixel art={plazaArt} palette={pal} />
+        </symbol>
+      </defs>
+    </svg>
+
+    <svg class="fish fish--a fish--1" viewBox={`0 0 ${fish.w} ${fish.h}`}><use href="#px-fish" width="100%" height="100%" /></svg>
+    <svg class="fish fish--b fish--2" viewBox={`0 0 ${fishB.w} ${fishB.h}`}><use href="#px-fish-b" width="100%" height="100%" /></svg>
+    <svg class="fish fish--c fish--3" viewBox={`0 0 ${fishC.w} ${fishC.h}`}><use href="#px-fish-c" width="100%" height="100%" /></svg>
+    <svg class="jelly jelly--1" viewBox={`0 0 ${jelly.w} ${jelly.h}`}><use href="#px-jelly" width="100%" height="100%" /></svg>
+    <svg class="diver" viewBox={`0 0 ${diver.w} ${diver.h}`}><use href="#px-diver" width="100%" height="100%" /></svg>
+    <svg class="fish fish--b fish--4" viewBox={`0 0 ${fishB.w} ${fishB.h}`}><use href="#px-fish-b" width="100%" height="100%" /></svg>
+
+    <div class="sea__bubbles">
+      <i></i><i></i><i></i><i></i><i></i><i></i>
+    </div>
+
+    <div class="reef">
+      <svg class="coral coral--1" viewBox={`0 0 ${coral.w} ${coral.h}`}><use href="#px-coral" width="100%" height="100%" /></svg>
+      <svg class="coral coral--2" viewBox={`0 0 ${coralB.w} ${coralB.h}`}><use href="#px-coral-b" width="100%" height="100%" /></svg>
+      <svg class="coral coral--3" viewBox={`0 0 ${coral.w} ${coral.h}`}><use href="#px-coral" width="100%" height="100%" /></svg>
+      <svg class="coral coral--4" viewBox={`0 0 ${coralB.w} ${coralB.h}`}><use href="#px-coral-b" width="100%" height="100%" /></svg>
+      <svg class="coral coral--5" viewBox={`0 0 ${coral.w} ${coral.h}`}><use href="#px-coral" width="100%" height="100%" /></svg>
+      <svg class="coral coral--6" viewBox={`0 0 ${coralB.w} ${coralB.h}`}><use href="#px-coral-b" width="100%" height="100%" /></svg>
+    </div>
+
+    <div class="bluehole">
+      <svg class="dolphin dolphin--1" viewBox={`0 0 ${dolphin.w} ${dolphin.h}`}><use href="#px-dolphin" width="100%" height="100%" /></svg>
+      <svg class="turtle turtle--1" viewBox={`0 0 ${turtle.w} ${turtle.h}`}><use href="#px-turtle" width="100%" height="100%" /></svg>
+      <svg class="wall wall--1" viewBox={`0 0 ${wall.w} ${wall.h}`}><use href="#px-wall" width="100%" height="100%" /></svg>
+      <svg class="wall wall--2" viewBox={`0 0 ${wall.w} ${wall.h}`}><use href="#px-wall" width="100%" height="100%" /></svg>
+      <svg class="wall wall--3" viewBox={`0 0 ${wall.w} ${wall.h}`}><use href="#px-wall" width="100%" height="100%" /></svg>
+      <svg class="drip drip--1" viewBox={`0 0 ${drip.w} ${drip.h}`}><use href="#px-drip" width="100%" height="100%" /></svg>
+      <svg class="drip drip--2" viewBox={`0 0 ${drip.w} ${drip.h}`}><use href="#px-drip" width="100%" height="100%" /></svg>
+      <svg class="drip drip--3" viewBox={`0 0 ${drip.w} ${drip.h}`}><use href="#px-drip" width="100%" height="100%" /></svg>
+      <svg class="drip drip--4" viewBox={`0 0 ${drip.w} ${drip.h}`}><use href="#px-drip" width="100%" height="100%" /></svg>
+      <svg class="manta manta--1" viewBox={`0 0 ${manta.w} ${manta.h}`}><use href="#px-manta" width="100%" height="100%" /></svg>
+      <svg class="shark shark--1" viewBox={`0 0 ${shark.w} ${shark.h}`}><use href="#px-shark" width="100%" height="100%" /></svg>
+      <svg class="shark shark--2" viewBox={`0 0 ${shark.w} ${shark.h}`}><use href="#px-shark" width="100%" height="100%" /></svg>
+    </div>
+
+    <div class="kelpbed">
+      <svg class="canopy canopy--1" viewBox={`0 0 ${canopy.w} ${canopy.h}`}><use href="#px-canopy" width="100%" height="100%" /></svg>
+      <svg class="canopy canopy--2" viewBox={`0 0 ${canopy.w} ${canopy.h}`}><use href="#px-canopy" width="100%" height="100%" /></svg>
+      <svg class="kelp kelp--1" viewBox={`0 0 ${kelp.w} ${kelp.h}`}><use href="#px-kelp" width="100%" height="100%" /></svg>
+      <svg class="kelp kelp--2" viewBox={`0 0 ${kelp.w} ${kelp.h}`}><use href="#px-kelp" width="100%" height="100%" /></svg>
+      <svg class="kelp kelp--3" viewBox={`0 0 ${kelp.w} ${kelp.h}`}><use href="#px-kelp" width="100%" height="100%" /></svg>
+      <svg class="kelp kelp--4" viewBox={`0 0 ${kelp.w} ${kelp.h}`}><use href="#px-kelp" width="100%" height="100%" /></svg>
+      <svg class="kelp kelp--5" viewBox={`0 0 ${kelp.w} ${kelp.h}`}><use href="#px-kelp" width="100%" height="100%" /></svg>
+      <svg class="stalk stalk--1" viewBox={`0 0 ${stalk.w} ${stalk.h}`}><use href="#px-stalk" width="100%" height="100%" /></svg>
+      <svg class="stalk stalk--2" viewBox={`0 0 ${stalk.w} ${stalk.h}`}><use href="#px-stalk" width="100%" height="100%" /></svg>
+      <svg class="stalk stalk--3" viewBox={`0 0 ${stalk.w} ${stalk.h}`}><use href="#px-stalk" width="100%" height="100%" /></svg>
+      <svg class="stalk stalk--4" viewBox={`0 0 ${stalk.w} ${stalk.h}`}><use href="#px-stalk" width="100%" height="100%" /></svg>
+      <svg class="stalk stalk--5" viewBox={`0 0 ${stalk.w} ${stalk.h}`}><use href="#px-stalk" width="100%" height="100%" /></svg>
+      <svg class="stalk stalk--6" viewBox={`0 0 ${stalk.w} ${stalk.h}`}><use href="#px-stalk" width="100%" height="100%" /></svg>
+      <svg class="stalk stalk--7" viewBox={`0 0 ${stalk.w} ${stalk.h}`}><use href="#px-stalk" width="100%" height="100%" /></svg>
+      <svg class="stalk stalk--8" viewBox={`0 0 ${stalk.w} ${stalk.h}`}><use href="#px-stalk" width="100%" height="100%" /></svg>
+      <svg class="boulder boulder--1" viewBox={`0 0 ${boulder.w} ${boulder.h}`}><use href="#px-boulder" width="100%" height="100%" /></svg>
+      <svg class="boulder boulder--2" viewBox={`0 0 ${boulder.w} ${boulder.h}`}><use href="#px-boulder" width="100%" height="100%" /></svg>
+      <svg class="boulder boulder--3" viewBox={`0 0 ${boulder.w} ${boulder.h}`}><use href="#px-boulder" width="100%" height="100%" /></svg>
+      <svg class="pinnacle pinnacle--1" viewBox={`0 0 ${pinnacle.w} ${pinnacle.h}`}><use href="#px-pinnacle" width="100%" height="100%" /></svg>
+      <svg class="pinnacle pinnacle--2" viewBox={`0 0 ${pinnacle.w} ${pinnacle.h}`}><use href="#px-pinnacle" width="100%" height="100%" /></svg>
+      <svg class="urchin urchin--1" viewBox={`0 0 ${urchin.w} ${urchin.h}`}><use href="#px-urchin" width="100%" height="100%" /></svg>
+      <svg class="urchin urchin--2" viewBox={`0 0 ${urchin.w} ${urchin.h}`}><use href="#px-urchin" width="100%" height="100%" /></svg>
+      <svg class="urchin urchin--3" viewBox={`0 0 ${urchin.w} ${urchin.h}`}><use href="#px-urchin" width="100%" height="100%" /></svg>
+      <svg class="urchin urchin--4" viewBox={`0 0 ${urchin.w} ${urchin.h}`}><use href="#px-urchin" width="100%" height="100%" /></svg>
+      <svg class="seastar seastar--1" viewBox={`0 0 ${star.w} ${star.h}`}><use href="#px-star" width="100%" height="100%" /></svg>
+      <svg class="seastar seastar--2" viewBox={`0 0 ${star.w} ${star.h}`}><use href="#px-star" width="100%" height="100%" /></svg>
+      <svg class="seastar seastar--3" viewBox={`0 0 ${star.w} ${star.h}`}><use href="#px-star" width="100%" height="100%" /></svg>
+      <svg class="garibaldi garibaldi--1" viewBox={`0 0 ${garibaldi.w} ${garibaldi.h}`}><use href="#px-garibaldi" width="100%" height="100%" /></svg>
+      <svg class="garibaldi garibaldi--2" viewBox={`0 0 ${garibaldi.w} ${garibaldi.h}`}><use href="#px-garibaldi" width="100%" height="100%" /></svg>
+      <svg class="garibaldi garibaldi--3" viewBox={`0 0 ${garibaldi.w} ${garibaldi.h}`}><use href="#px-garibaldi" width="100%" height="100%" /></svg>
+      <svg class="otter otter--1" viewBox={`0 0 ${otter.w} ${otter.h}`}><use href="#px-otter" width="100%" height="100%" /></svg>
+      <svg class="otter otter--2" viewBox={`0 0 ${otter.w} ${otter.h}`}><use href="#px-otter" width="100%" height="100%" /></svg>
+    </div>
+
+    <div class="ice">
+      <svg class="floe floe--1" viewBox={`0 0 ${floe.w} ${floe.h}`}><use href="#px-floe" width="100%" height="100%" /></svg>
+      <svg class="floe floe--2" viewBox={`0 0 ${floe.w} ${floe.h}`}><use href="#px-floe" width="100%" height="100%" /></svg>
+      <svg class="berg berg--1" viewBox={`0 0 ${berg.w} ${berg.h}`}><use href="#px-berg" width="100%" height="100%" /></svg>
+      <svg class="berg berg--2" viewBox={`0 0 ${berg.w} ${berg.h}`}><use href="#px-berg" width="100%" height="100%" /></svg>
+      <svg class="berg berg--3" viewBox={`0 0 ${berg.w} ${berg.h}`}><use href="#px-berg" width="100%" height="100%" /></svg>
+      <svg class="brinicle brinicle--1" viewBox={`0 0 ${brinicle.w} ${brinicle.h}`}><use href="#px-brinicle" width="100%" height="100%" /></svg>
+      <svg class="brinicle brinicle--2" viewBox={`0 0 ${brinicle.w} ${brinicle.h}`}><use href="#px-brinicle" width="100%" height="100%" /></svg>
+      <svg class="brinicle brinicle--3" viewBox={`0 0 ${brinicle.w} ${brinicle.h}`}><use href="#px-brinicle" width="100%" height="100%" /></svg>
+      <svg class="brinicle brinicle--4" viewBox={`0 0 ${brinicle.w} ${brinicle.h}`}><use href="#px-brinicle" width="100%" height="100%" /></svg>
+      <svg class="crevasse crevasse--1" viewBox={`0 0 ${crevasse.w} ${crevasse.h}`}><use href="#px-crevasse" width="100%" height="100%" /></svg>
+      <svg class="crevasse crevasse--2" viewBox={`0 0 ${crevasse.w} ${crevasse.h}`}><use href="#px-crevasse" width="100%" height="100%" /></svg>
+      <svg class="pressure pressure--1" viewBox={`0 0 ${pressure.w} ${pressure.h}`}><use href="#px-pressure" width="100%" height="100%" /></svg>
+      <svg class="pressure pressure--2" viewBox={`0 0 ${pressure.w} ${pressure.h}`}><use href="#px-pressure" width="100%" height="100%" /></svg>
+      <svg class="algae algae--1" viewBox={`0 0 ${algae.w} ${algae.h}`}><use href="#px-algae" width="100%" height="100%" /></svg>
+      <svg class="algae algae--2" viewBox={`0 0 ${algae.w} ${algae.h}`}><use href="#px-algae" width="100%" height="100%" /></svg>
+      <svg class="crystal crystal--1" viewBox={`0 0 ${crystal.w} ${crystal.h}`}><use href="#px-crystal" width="100%" height="100%" /></svg>
+      <svg class="crystal crystal--2" viewBox={`0 0 ${crystal.w} ${crystal.h}`}><use href="#px-crystal" width="100%" height="100%" /></svg>
+      <svg class="crystal crystal--3" viewBox={`0 0 ${crystal.w} ${crystal.h}`}><use href="#px-crystal" width="100%" height="100%" /></svg>
+      <svg class="crystal crystal--4" viewBox={`0 0 ${crystal.w} ${crystal.h}`}><use href="#px-crystal" width="100%" height="100%" /></svg>
+      <svg class="crystal crystal--5" viewBox={`0 0 ${crystal.w} ${crystal.h}`}><use href="#px-crystal" width="100%" height="100%" /></svg>
+      <svg class="angel angel--1" viewBox={`0 0 ${angel.w} ${angel.h}`}><use href="#px-angel" width="100%" height="100%" /></svg>
+      <svg class="angel angel--2" viewBox={`0 0 ${angel.w} ${angel.h}`}><use href="#px-angel" width="100%" height="100%" /></svg>
+      <svg class="angel angel--3" viewBox={`0 0 ${angel.w} ${angel.h}`}><use href="#px-angel" width="100%" height="100%" /></svg>
+      <svg class="krill krill--1" viewBox={`0 0 ${krill.w} ${krill.h}`}><use href="#px-krill" width="100%" height="100%" /></svg>
+      <svg class="krill krill--2" viewBox={`0 0 ${krill.w} ${krill.h}`}><use href="#px-krill" width="100%" height="100%" /></svg>
+      <svg class="krill krill--3" viewBox={`0 0 ${krill.w} ${krill.h}`}><use href="#px-krill" width="100%" height="100%" /></svg>
+      <svg class="krill krill--4" viewBox={`0 0 ${krill.w} ${krill.h}`}><use href="#px-krill" width="100%" height="100%" /></svg>
+      <svg class="krill krill--5" viewBox={`0 0 ${krill.w} ${krill.h}`}><use href="#px-krill" width="100%" height="100%" /></svg>
+      <svg class="icefish icefish--1" viewBox={`0 0 ${icefish.w} ${icefish.h}`}><use href="#px-icefish" width="100%" height="100%" /></svg>
+      <svg class="icefish icefish--2" viewBox={`0 0 ${icefish.w} ${icefish.h}`}><use href="#px-icefish" width="100%" height="100%" /></svg>
+      <svg class="seal seal--1" viewBox={`0 0 ${seal.w} ${seal.h}`}><use href="#px-seal" width="100%" height="100%" /></svg>
+      <svg class="seal seal--2" viewBox={`0 0 ${seal.w} ${seal.h}`}><use href="#px-seal" width="100%" height="100%" /></svg>
+    </div>
+
+    <div class="chimneys">
+      <svg class="mat mat--1" viewBox={`0 0 ${mat.w * 20} ${mat.h}`} preserveAspectRatio="xMidYMid slice">
+        {Array.from({ length: 20 }, (_, index) => (
+          <g transform={`translate(${index * mat.w} 0)`}>
+            <Pixel art={matArt} palette={pal} />
+          </g>
+        ))}
+      </svg>
+      <svg class="mat mat--2" viewBox={`0 0 ${mat.w * 20} ${mat.h}`} preserveAspectRatio="xMidYMid slice">
+        {Array.from({ length: 20 }, (_, index) => (
+          <g transform={`translate(${index * mat.w} 0)`}>
+            <Pixel art={matArt} palette={pal} />
+          </g>
+        ))}
+      </svg>
+      <svg class="ridge ridge--1" viewBox={`0 0 ${ridge.w} ${ridge.h}`}><use href="#px-ridge" width="100%" height="100%" /></svg>
+      <svg class="ridge ridge--2" viewBox={`0 0 ${ridge.w} ${ridge.h}`}><use href="#px-ridge" width="100%" height="100%" /></svg>
+      <svg class="basalt basalt--1" viewBox={`0 0 ${basalt.w} ${basalt.h}`}><use href="#px-basalt" width="100%" height="100%" /></svg>
+      <svg class="basalt basalt--2" viewBox={`0 0 ${basalt.w} ${basalt.h}`}><use href="#px-basalt" width="100%" height="100%" /></svg>
+      <svg class="basalt basalt--3" viewBox={`0 0 ${basalt.w} ${basalt.h}`}><use href="#px-basalt" width="100%" height="100%" /></svg>
+      <svg class="basalt basalt--4" viewBox={`0 0 ${basalt.w} ${basalt.h}`}><use href="#px-basalt" width="100%" height="100%" /></svg>
+      <svg class="chimney chimney--1" viewBox={`0 0 ${vent.w} ${vent.h}`}><use href="#px-vent" width="100%" height="100%" /></svg>
+      <svg class="chimney chimney--2" viewBox={`0 0 ${vent.w} ${vent.h}`}><use href="#px-vent" width="100%" height="100%" /></svg>
+      <svg class="chimney chimney--3" viewBox={`0 0 ${vent.w} ${vent.h}`}><use href="#px-vent" width="100%" height="100%" /></svg>
+      <svg class="chimney chimney--4" viewBox={`0 0 ${vent.w} ${vent.h}`}><use href="#px-vent" width="100%" height="100%" /></svg>
+      <svg class="worm worm--1" viewBox={`0 0 ${worm.w} ${worm.h}`}><use href="#px-worm" width="100%" height="100%" /></svg>
+      <svg class="worm worm--2" viewBox={`0 0 ${worm.w} ${worm.h}`}><use href="#px-worm" width="100%" height="100%" /></svg>
+      <svg class="worm worm--3" viewBox={`0 0 ${worm.w} ${worm.h}`}><use href="#px-worm" width="100%" height="100%" /></svg>
+      <svg class="worm worm--4" viewBox={`0 0 ${worm.w} ${worm.h}`}><use href="#px-worm" width="100%" height="100%" /></svg>
+      <svg class="mussel mussel--1" viewBox={`0 0 ${mussel.w} ${mussel.h}`}><use href="#px-mussel" width="100%" height="100%" /></svg>
+      <svg class="mussel mussel--2" viewBox={`0 0 ${mussel.w} ${mussel.h}`}><use href="#px-mussel" width="100%" height="100%" /></svg>
+      <svg class="mussel mussel--3" viewBox={`0 0 ${mussel.w} ${mussel.h}`}><use href="#px-mussel" width="100%" height="100%" /></svg>
+      <svg class="crab crab--1" viewBox={`0 0 ${crab.w} ${crab.h}`}><use href="#px-crab" width="100%" height="100%" /></svg>
+      <svg class="crab crab--2" viewBox={`0 0 ${crab.w} ${crab.h}`}><use href="#px-crab" width="100%" height="100%" /></svg>
+      <svg class="shrimp shrimp--1" viewBox={`0 0 ${shrimp.w} ${shrimp.h}`}><use href="#px-shrimp" width="100%" height="100%" /></svg>
+      <svg class="shrimp shrimp--2" viewBox={`0 0 ${shrimp.w} ${shrimp.h}`}><use href="#px-shrimp" width="100%" height="100%" /></svg>
+      <svg class="shrimp shrimp--3" viewBox={`0 0 ${shrimp.w} ${shrimp.h}`}><use href="#px-shrimp" width="100%" height="100%" /></svg>
+      <svg class="shrimp shrimp--4" viewBox={`0 0 ${shrimp.w} ${shrimp.h}`}><use href="#px-shrimp" width="100%" height="100%" /></svg>
+      <svg class="eel eel--1" viewBox={`0 0 ${eel.w} ${eel.h}`}><use href="#px-eel" width="100%" height="100%" /></svg>
+      <svg class="eel eel--2" viewBox={`0 0 ${eel.w} ${eel.h}`}><use href="#px-eel" width="100%" height="100%" /></svg>
+    </div>
+
+    <div class="ruins">
+      <svg class="plaza plaza--1" viewBox={`0 0 ${plaza.w * 18} ${plaza.h}`} preserveAspectRatio="xMidYMid slice">
+        {Array.from({ length: 18 }, (_, index) => (
+          <g transform={`translate(${index * plaza.w} 0)`}>
+            <Pixel art={plazaArt} palette={pal} />
+          </g>
+        ))}
+      </svg>
+      <svg class="plaza plaza--2" viewBox={`0 0 ${plaza.w * 18} ${plaza.h}`} preserveAspectRatio="xMidYMid slice">
+        {Array.from({ length: 18 }, (_, index) => (
+          <g transform={`translate(${index * plaza.w} 0)`}>
+            <Pixel art={plazaArt} palette={pal} />
+          </g>
+        ))}
+      </svg>
+      <svg class="plaza plaza--3" viewBox={`0 0 ${plaza.w * 18} ${plaza.h}`} preserveAspectRatio="xMidYMid slice">
+        {Array.from({ length: 18 }, (_, index) => (
+          <g transform={`translate(${index * plaza.w} 0)`}>
+            <Pixel art={plazaArt} palette={pal} />
+          </g>
+        ))}
+      </svg>
+      <svg class="stairs stairs--1" viewBox={`0 0 ${stairs.w} ${stairs.h}`}><use href="#px-stairs" width="100%" height="100%" /></svg>
+      <svg class="stairs stairs--2" viewBox={`0 0 ${stairs.w} ${stairs.h}`}><use href="#px-stairs" width="100%" height="100%" /></svg>
+      <svg class="temple temple--1" viewBox={`0 0 ${temple.w} ${temple.h}`}><use href="#px-temple" width="100%" height="100%" /></svg>
+      <svg class="temple temple--2" viewBox={`0 0 ${temple.w} ${temple.h}`}><use href="#px-temple" width="100%" height="100%" /></svg>
+      <svg class="temple temple--3" viewBox={`0 0 ${temple.w} ${temple.h}`}><use href="#px-temple" width="100%" height="100%" /></svg>
+      <svg class="colonnade colonnade--1" viewBox={`0 0 ${colonnade.w} ${colonnade.h}`}><use href="#px-colonnade" width="100%" height="100%" /></svg>
+      <svg class="colonnade colonnade--2" viewBox={`0 0 ${colonnade.w} ${colonnade.h}`}><use href="#px-colonnade" width="100%" height="100%" /></svg>
+      <svg class="dome dome--1" viewBox={`0 0 ${dome.w} ${dome.h}`}><use href="#px-dome" width="100%" height="100%" /></svg>
+      <svg class="dome dome--2" viewBox={`0 0 ${dome.w} ${dome.h}`}><use href="#px-dome" width="100%" height="100%" /></svg>
+      <svg class="statue statue--1" viewBox={`0 0 ${statue.w} ${statue.h}`}><use href="#px-statue" width="100%" height="100%" /></svg>
+      <svg class="statue statue--2" viewBox={`0 0 ${statue.w} ${statue.h}`}><use href="#px-statue" width="100%" height="100%" /></svg>
+      <svg class="arch arch--1" viewBox={`0 0 ${arch.w} ${arch.h}`}><use href="#px-arch" width="100%" height="100%" /></svg>
+      <svg class="arch arch--2" viewBox={`0 0 ${arch.w} ${arch.h}`}><use href="#px-arch" width="100%" height="100%" /></svg>
+      <svg class="column column--1" viewBox={`0 0 ${column.w} ${column.h}`}><use href="#px-column" width="100%" height="100%" /></svg>
+      <svg class="column column--2" viewBox={`0 0 ${column.w} ${column.h}`}><use href="#px-column" width="100%" height="100%" /></svg>
+      <svg class="column column--3" viewBox={`0 0 ${column.w} ${column.h}`}><use href="#px-column" width="100%" height="100%" /></svg>
+      <svg class="column column--4" viewBox={`0 0 ${columnShort.w} ${columnShort.h}`}><use href="#px-column-short" width="100%" height="100%" /></svg>
+      <svg class="column column--5" viewBox={`0 0 ${column.w} ${column.h}`}><use href="#px-column" width="100%" height="100%" /></svg>
+      <svg class="column fallen fallen--1" viewBox={`0 0 ${column.w} ${column.h}`}><use href="#px-column" width="100%" height="100%" /></svg>
+      <svg class="column fallen fallen--2" viewBox={`0 0 ${column.w} ${column.h}`}><use href="#px-column" width="100%" height="100%" /></svg>
+      <svg class="brazier brazier--1" viewBox={`0 0 ${brazier.w} ${brazier.h}`}><use href="#px-brazier" width="100%" height="100%" /></svg>
+      <svg class="brazier brazier--2" viewBox={`0 0 ${brazier.w} ${brazier.h}`}><use href="#px-brazier" width="100%" height="100%" /></svg>
+      <svg class="brazier brazier--3" viewBox={`0 0 ${brazier.w} ${brazier.h}`}><use href="#px-brazier" width="100%" height="100%" /></svg>
+      <svg class="kelp kelp--r1" viewBox={`0 0 ${kelp.w} ${kelp.h}`}><use href="#px-kelp" width="100%" height="100%" /></svg>
+      <svg class="kelp kelp--r2" viewBox={`0 0 ${kelp.w} ${kelp.h}`}><use href="#px-kelp" width="100%" height="100%" /></svg>
+      <svg class="kelp kelp--r3" viewBox={`0 0 ${kelp.w} ${kelp.h}`}><use href="#px-kelp" width="100%" height="100%" /></svg>
+      <svg class="coral coral--r1" viewBox={`0 0 ${coral.w} ${coral.h}`}><use href="#px-coral" width="100%" height="100%" /></svg>
+      <svg class="coral coral--r2" viewBox={`0 0 ${coralB.w} ${coralB.h}`}><use href="#px-coral-b" width="100%" height="100%" /></svg>
+      <svg class="mosaic" viewBox={`0 0 ${mosaic.w} ${mosaic.h}`}><use href="#px-mosaic" width="100%" height="100%" /></svg>
+    </div>
+
+    <div class="deep">
+      <svg class="angler" viewBox={`0 0 ${angler.w} ${angler.h}`}><use href="#px-angler" width="100%" height="100%" /></svg>
+      <div class="kraken">
+        <svg class="kraken__mass" viewBox="0 0 1200 640" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
+          <defs>
+            <filter id="kraken-soft" x="-40%" y="-40%" width="180%" height="180%">
+              <feGaussianBlur stdDeviation="8" />
+            </filter>
+          </defs>
+          <g filter="url(#kraken-soft)" fill="none" stroke="#9bb4c6" stroke-linecap="round">
+            <path d="M470 200 C 340 120, 180 90, 20 160" stroke-width="34" opacity="0.34" />
+            <path d="M500 248 C 320 270, 150 230, -10 300" stroke-width="46" opacity="0.46" />
+            <path d="M530 290 C 380 360, 220 340, 70 420" stroke-width="28" opacity="0.3" />
+            <path d="M730 198 C 880 110, 1040 90, 1200 170" stroke-width="32" opacity="0.32" />
+            <path d="M700 252 C 900 280, 1060 230, 1230 310" stroke-width="44" opacity="0.42" />
+            <path d="M670 296 C 840 370, 1000 350, 1160 430" stroke-width="26" opacity="0.28" />
+          </g>
+        </svg>
+        <span class="kraken__eye kraken__eye--l"><i></i></span>
+        <span class="kraken__eye kraken__eye--r"><i></i></span>
+      </div>
+      <div class="motes"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
+  </div>
+
+  <div class="sea__pool"></div>
+  <p class="sea__hud"><span class="sea__zone">海面</span> <strong class="sea__depth">000</strong> m</p>
+  <div class="page-bg__frame">
+    <span></span><span></span><span></span><span></span>
+  </div>
+</div>

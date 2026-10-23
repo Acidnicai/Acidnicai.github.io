@@ -1,5 +1,5 @@
 import { getCollection, type CollectionEntry } from "astro:content";
-import type { BookId, TopicId } from "../site.config";
+import type { BookId, CourseId, TopicId } from "../site.config";
 
 export type Post = CollectionEntry<"blog">;
 
@@ -30,6 +30,16 @@ export function postsByTopic(posts: Post[], topic: TopicId): Post[] {
 export function postsByBook(posts: Post[], book: BookId): Post[] {
   return posts
     .filter((post) => post.data.book === book)
+    .sort(
+      (a, b) =>
+        (a.data.chapter ?? 0) - (b.data.chapter ?? 0) ||
+        a.data.title.localeCompare(b.data.title, "zh"),
+    );
+}
+
+export function postsByCourse(posts: Post[], course: CourseId): Post[] {
+  return posts
+    .filter((post) => post.data.course === course)
     .sort(
       (a, b) =>
         (a.data.chapter ?? 0) - (b.data.chapter ?? 0) ||

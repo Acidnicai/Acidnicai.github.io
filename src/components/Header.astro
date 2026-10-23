@@ -1,5 +1,5 @@
 ---
-import { topics } from "../site.config";
+import { site, topics } from "../site.config";
 import { url } from "../lib/utils";
 import ThemeToggle from "./ThemeToggle.astro";
 
@@ -23,6 +23,7 @@ function current(match: string) {
 
 <header class="site-header">
   <div class="wrap site-header__inner">
+    <p class="brand">{site.title}</p>
     <nav class="nav" aria-label="主导航">
       {
         links.map((link) => (

@@ -1,0 +1,51 @@
+---
+---
+
+<form class="book-search" role="search" data-book-search>
+  <label for="book-q">查找读本</label>
+  <input
+    id="book-q"
+    type="search"
+    name="q"
+    placeholder="书名、作者或简介"
+    autocomplete="off"
+    enterkeyhint="search"
+  />
+</form>
+<p class="book-search__empty section-note" data-book-search-empty hidden>
+  没有找到对应的读本。
+</p>
+
+<script>
+  const form = document.querySelector("[data-book-search]");
+  const empty = document.querySelector("[data-book-search-empty]");
+  if (!(form instanceof HTMLFormElement) || !(empty instanceof HTMLElement)) {
+    // no-op when this component is not on the page
+  } else {
+    const input = form.querySelector("input");
+    const shelves = document.querySelectorAll<HTMLElement>(".book-shelf[data-search]");
+
+    function normalize(value: string) {
+      return value.toLowerCase().replace(/\s+/g, "");
+    }
+
+    function filter() {
+      if (!(input instanceof HTMLInputElement)) return;
+      const query = normalize(input.value);
+      let visible = 0;
+      for (const shelf of shelves) {
+        const haystack = normalize(shelf.dataset.search ?? "");
+        const show = query.length === 0 || haystack.includes(query);
+        shelf.hidden = !show;
+        if (show) visible += 1;
+      }
+      empty.hidden = visible > 0;
+    }
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      filter();
+    });
+    input?.addEventListener("input", filter);
+  }
+</script>

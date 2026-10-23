@@ -23,11 +23,11 @@ const tags = allTags(await publishedPosts());
 ---
 
 <Base title={`标签：${tag}`} description={`带有「${tag}」标签的文章`}>
-  <div class="panel">
-    <h1 class="page-title">#{tag}</h1>
+  <header>
+    <h1 class="page-title">{tag}</h1>
     <p class="lede">{posts.length} 篇文章</p>
     <TagList tags={tags} current={tag} />
-  </div>
+  </header>
   <ul class="post-list">
     {posts.map((post) => <PostCard post={post} />)}
   </ul>

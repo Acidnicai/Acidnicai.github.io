@@ -1,0 +1,33 @@
+---
+import Base from "../../../layouts/Base.astro";
+import { allPhraseAisles } from "../../../lib/phrases";
+import { url } from "../../../lib/utils";
+
+const aisles = await allPhraseAisles();
+---
+
+<Base title="生活用语" description="按场合进分区。点进一类才看该用的话。">
+  <header class="word-book-page">
+    <p class="series__label">
+      <a href={url("/english/")}>英语</a>
+    </p>
+    <h1 class="page-title">生活用语</h1>
+    <p class="lede">按要去干什么、在什么场合。点进一类，再看该用的话。</p>
+  </header>
+
+  <ul class="aisle-grid">
+    {
+      aisles.map((aisle) => (
+        <li>
+          <a class="series-tool" href={url(`/english/phrases/${aisle.id}/`)}>
+            <span class="series-tool__name">{aisle.title}</span>
+            <span class="series-tool__hint">
+              {aisle.phrases.length} 句 · {aisle.hint}
+            </span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+  <p class="word-book__foot">新场合写在 src/content/phrases/，照 notes.md 抄一条货架。</p>
+</Base>

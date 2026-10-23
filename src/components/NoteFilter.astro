@@ -1,0 +1,116 @@
+---
+import type { FilterDimension } from "../lib/post-filters";
+
+interface Props {
+  dimensions: FilterDimension[];
+}
+
+const { dimensions } = Astro.props;
+---
+
+<nav class="note-filter" aria-label="筛选笔记" data-note-filter>
+  {
+    dimensions.map((dim) =>
+      dim.kind === "choice" ? (
+        <div class="note-filter__row" role="radiogroup" aria-label={dim.label} data-filter-row={dim.key}>
+          <p class="note-filter__key">{dim.label}</p>
+          <div class="note-filter__opts">
+            <button type="button" role="radio" data-filter-value="" aria-checked="true">
+              全部
+            </button>
+            {dim.options.map((opt) => (
+              <button type="button" role="radio" data-filter-value={opt.value} aria-checked="false">
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div class="note-filter__row note-filter__row--text" data-filter-row={dim.key}>
+          <label class="note-filter__key" for={`note-q-${dim.key}`}>
+            {dim.label}
+          </label>
+          <input
+            class="note-filter__input"
+            id={`note-q-${dim.key}`}
+            type="search"
+            name={dim.key}
+            placeholder={dim.placeholder}
+            autocomplete="off"
+            enterkeyhint="search"
+            data-filter-input={dim.key}
+          />
+        </div>
+      ),
+    )
+  }
+</nav>
+<p class="note-filter__empty section-note" data-note-filter-empty hidden>
+  没有符合条件的笔记。
+</p>
+
+<script>
+  const root = document.querySelector("[data-note-filter]");
+  const empty = document.querySelector("[data-note-filter-empty]");
+  if (root instanceof HTMLElement && empty instanceof HTMLElement) {
+    const selected: Record<string, string> = {};
+    const items = document.querySelectorAll<HTMLElement>("[data-note-item]");
+    const groups = document.querySelectorAll<HTMLElement>("[data-year-group]");
+
+    function normalize(value: string) {
+      return value.toLowerCase().replace(/\s+/g, "");
+    }
+
+    function apply() {
+      const bookQuery = normalize(selected.book ?? "");
+      const authorQuery = normalize(selected.author ?? "");
+      let visible = 0;
+      for (const item of items) {
+        const yearOk = !selected.year || item.dataset.year === selected.year;
+        const monthOk = !selected.month || item.dataset.month === selected.month;
+        const topicOk = !selected.topic || item.dataset.topic === selected.topic;
+        const bookOk = !bookQuery || normalize(item.dataset.book ?? "").includes(bookQuery);
+        const authorOk = !authorQuery || normalize(item.dataset.author ?? "").includes(authorQuery);
+        const show = yearOk && monthOk && topicOk && bookOk && authorOk;
+        item.hidden = !show;
+        if (show) visible += 1;
+      }
+      for (const group of groups) {
+        group.hidden = group.querySelectorAll("[data-note-item]:not([hidden])").length === 0;
+      }
+      empty.hidden = visible > 0;
+    }
+
+    root.addEventListener("click", (event) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      const button = target.closest("button[data-filter-value]");
+      if (!(button instanceof HTMLButtonElement)) return;
+      const row = button.closest("[data-filter-row]");
+      if (!(row instanceof HTMLElement)) return;
+      const key = row.dataset.filterRow;
+      if (!key) return;
+      selected[key] = button.dataset.filterValue ?? "";
+      for (const btn of row.querySelectorAll("button[data-filter-value]")) {
+        btn.setAttribute("aria-checked", btn === button ? "true" : "false");
+      }
+      apply();
+    });
+
+    root.addEventListener("input", (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLInputElement)) return;
+      const key = target.dataset.filterInput;
+      if (!key) return;
+      selected[key] = target.value;
+      apply();
+    });
+
+    root.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter") return;
+      const target = event.target;
+      if (!(target instanceof HTMLInputElement)) return;
+      event.preventDefault();
+    });
+  }
+</script>

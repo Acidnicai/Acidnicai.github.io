@@ -11,8 +11,8 @@ export const site = {
   base: "/",
   title: "灾区尼采的博客",
   author: "李朋宸",
-  description: "硬件、数学，以及读过的书。",
-  motto: "今天也在电路和公式里，慢慢往前走。",
+  description: "硬件、数学、读过的书，以及当作工具来用的英语。",
+  motto: "看懂的，才写下。",
   lang: "zh-CN",
   github: "https://github.com/Acidnicai",
   email: "lipengcheng88@gmail.com",
@@ -68,13 +68,13 @@ export const profile = {
   /** 个人照片：文件放到 `public/images/me.jpg`。 */
   avatar: "images/me.jpg",
   intro: [
-    "李朋宸，本科就读于沈阳师范大学。平时主要在硬件和数学两边走，电路、证明，以及把学过的东西慢慢记下来。",
+    "李朋宸，本科就读于沈阳师范大学。平时主要在硬件和数学两边走，电路、证明，以及把学过的东西慢慢记下来。英语也记一点，当工具用。",
     "这个博客用来放学习笔记。想写清楚自己搞懂了什么，也想给以后回头看的自己留一条痕迹。",
   ],
   facts: [
     { label: "坐标", value: "辽宁沈阳" },
     { label: "学历", value: "本科" },
-    { label: "在学", value: "硬件 · 数学 · 读本" },
+    { label: "在学", value: "硬件 · 数学 · 读本 · 英语" },
   ],
   education: [
     {
@@ -119,6 +119,10 @@ export const topics = {
     name: "读本",
     description: "读过的书：每一章的理解、难点，以及习题解答。",
   },
+  english: {
+    name: "英语",
+    description: "英语是工具：为了读文章、打牌。见词生义，不要先译成汉语再理解。",
+  },
 } as const;
 
 export type TopicId = keyof typeof topics;
@@ -145,3 +149,52 @@ export const books = {
 export type BookId = keyof typeof books;
 const bookIds = Object.keys(books) as [BookId, ...BookId[]];
 export const bookIdSchema = bookIds;
+
+/**
+ * 某个专栏里的课程模块。高数导学挂在数学栏目下。
+ * 文章 frontmatter 的 course 用同一个 key，chapter 写第几章。
+ */
+export const courses = {
+  "gaoshu-guide": {
+    topic: "math",
+    title: "高数导学",
+    description: "按导学的章节往下：定义、卡点和常考题型。",
+    chapters: [
+      "导读",
+      "函数、极限与连续",
+      "一元函数微分学",
+      "一元函数积分学",
+      "空间解析几何及其应用",
+      "多元函数微分学",
+      "二重积分",
+      "无穷级数",
+      "空间解析几何及其应用",
+      "多元积分学及其应用",
+    ],
+  },
+  "exam-english": {
+    topic: "english",
+    title: "应试英语",
+    description: "考试里真正要练的是什么：能直接读、能写进句子，而不是把词表背成汉语。",
+  },
+  "english-words": {
+    topic: "english",
+    title: "单词",
+    description: "词本里记、词本里背。一句英语一个场面，不写成词表作文。",
+  },
+  "living-english": {
+    topic: "english",
+    title: "生活用语",
+    description: "按场合进分区。点进一类才看该用的话，不写成一篇混在一起。",
+  },
+} as const;
+
+export type CourseId = keyof typeof courses;
+const courseIds = Object.keys(courses) as [CourseId, ...CourseId[]];
+export const courseIdSchema = courseIds;
+
+export function coursesForTopic(topic: TopicId) {
+  return (Object.entries(courses) as [CourseId, (typeof courses)[CourseId]][]).filter(
+    ([, course]) => course.topic === topic,
+  );
+}

@@ -1,23 +1,30 @@
 ---
 import Base from "../../layouts/Base.astro";
+import NoteFilter from "../../components/NoteFilter.astro";
 import PostCard from "../../components/PostCard.astro";
+import { noteFilterDimensions } from "../../lib/post-filters";
 import { publishedPosts, postsByYear } from "../../lib/posts";
 
 const posts = await publishedPosts();
 const grouped = postsByYear(posts);
 const years = [...grouped.keys()].sort((a, b) => b - a);
+const dimensions = noteFilterDimensions(posts);
 ---
 
 <Base title="全部笔记" description="全部学习笔记归档">
-  <div class="panel">
+  <header>
     <h1 class="page-title">全部笔记</h1>
-    <p class="lede">硬件、数学和读本都在这里，共 {posts.length} 篇，按年份排列。</p>
-  </div>
+    <p class="lede">硬件、数学、读本和英语都在这里，共 {posts.length} 篇，按年份排列。</p>
+  </header>
+
+  <NoteFilter dimensions={dimensions} />
 
   {
     years.map((year) => (
-      <section class="year-group feed">
-        <h2>{year}</h2>
+      <section class="year-group feed" data-year-group>
+        <header class="section-head">
+          <h2>{year}</h2>
+        </header>
         <ul class="post-list">
           {grouped.get(year)!.map((post) => (
             <PostCard post={post} />

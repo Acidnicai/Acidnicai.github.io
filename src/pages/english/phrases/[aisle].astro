@@ -1,0 +1,42 @@
+---
+import Base from "../../../layouts/Base.astro";
+import { allPhraseAisles, type PhraseAisle } from "../../../lib/phrases";
+import { url } from "../../../lib/utils";
+
+export async function getStaticPaths() {
+  const aisles = await allPhraseAisles();
+  return aisles.map((aisle) => ({
+    params: { aisle: aisle.id },
+    props: { aisle },
+  }));
+}
+
+interface Props {
+  aisle: PhraseAisle;
+}
+
+const { aisle } = Astro.props;
+---
+
+<Base title={`${aisle.title} · 生活用语`} description={aisle.hint}>
+  <header class="word-book-page">
+    <p class="series__label">
+      <a href={url("/english/")}>英语</a>
+      <span aria-hidden="true"> · </span>
+      <a href={url("/english/phrases/")}>生活用语</a>
+    </p>
+    <h1 class="page-title">{aisle.title}</h1>
+    <p class="lede">{aisle.hint}。一句一个场面，不先译成汉语。</p>
+  </header>
+
+  <ul class="phrase-shelf">
+    {
+      aisle.phrases.map((phrase) => (
+        <li class="word-card">
+          <p class="word-card__example">{phrase.line}</p>
+          <p class="word-card__scene">{phrase.scene}</p>
+        </li>
+      ))
+    }
+  </ul>
+</Base>

@@ -1,0 +1,19 @@
+---
+import Base from "../../layouts/Base.astro";
+import WordBook from "../../components/WordBook.astro";
+import { allWordEntries } from "../../lib/words";
+import { url } from "../../lib/utils";
+
+const entries = await allWordEntries();
+---
+
+<Base title="词本" description="记单词、背单词。一句英语一个场面。">
+  <header class="word-book-page">
+    <p class="series__label">
+      <a href={url("/english/")}>英语</a>
+    </p>
+    <h1 class="page-title">词本</h1>
+    <p class="lede">一句英语，一个场面。先看句子，再想它在干什么。</p>
+  </header>
+  <WordBook entries={entries} />
+</Base>

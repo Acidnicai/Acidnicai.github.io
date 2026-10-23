@@ -1,26 +1,45 @@
 ---
 import type { Post } from "../lib/posts";
-import { books, topics } from "../site.config";
+import { bookAuthorOf, bookTitleOf } from "../lib/post-filters";
+import { chapterParts } from "../lib/series";
 import { formatDateShort, url } from "../lib/utils";
 
 interface Props {
   post: Post;
+  nested?: boolean;
 }
 
-const { post } = Astro.props;
-const topic = topics[post.data.topic];
-const book = post.data.book ? books[post.data.book] : undefined;
+const { post, nested = false } = Astro.props;
+const { series, mark, title, titleIsMark } = chapterParts(post);
+const showSeries = !nested;
+const showMark = Boolean(mark) && !titleIsMark;
+const bookTitle = bookTitleOf(post);
+const author = bookAuthorOf(post);
 ---
 
-<li class="post-card">
-  <a href={url(`/posts/${post.id}/`)}>
-    <h2>{post.data.title}</h2>
+<li
+  class="post-card"
+  data-note-item
+  data-year={String(post.data.pubDate.getFullYear())}
+  data-month={String(post.data.pubDate.getMonth() + 1)}
+  data-topic={post.data.topic}
+  data-book={bookTitle}
+  data-author={author}
+>
+  {
+    showSeries && (
+      <p class="post-card__series">
+        <a href={series.href}>{series.name}</a>
+      </p>
+    )
+  }
+  <a class="post-card__body" href={url(`/posts/${post.id}/`)}>
+    {showMark && <p class="post-card__mark">{mark}</p>}
+    <h2>{title}</h2>
     <p class="post-list__meta">
       <time datetime={post.data.pubDate.toISOString()}>
         {formatDateShort(post.data.pubDate)}
       </time>
-      <span>{book ? book.title : topic.name}</span>
-      {post.data.chapter && <span>第 {post.data.chapter} 章</span>}
     </p>
     <p class="post-list__desc">{post.data.description}</p>
   </a>

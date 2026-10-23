@@ -10,9 +10,10 @@ const { tags, current } = Astro.props;
 const items = Array.isArray(tags)
   ? tags.map((tag) => [tag, undefined] as const)
   : [...tags.entries()];
+const withCount = items.some(([, count]) => typeof count === "number");
 ---
 
-<div class="tags">
+<div class:list={["tags", { "tags--cloud": withCount }]}>
   {
     items.map(([tag, count]) => (
       <a
@@ -20,8 +21,8 @@ const items = Array.isArray(tags)
         href={url(`/tags/${encodeURIComponent(tag)}/`)}
         aria-current={current === tag ? "page" : undefined}
       >
-        {tag}
-        {typeof count === "number" ? ` ${count}` : ""}
+        <span class="tag__name">{tag}</span>
+        {typeof count === "number" && <span class="tag__count">{count} 篇</span>}
       </a>
     ))
   }

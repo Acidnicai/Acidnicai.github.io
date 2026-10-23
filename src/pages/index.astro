@@ -1,19 +1,99 @@
 ---
 import Base from "../layouts/Base.astro";
-import PostCard from "../components/PostCard.astro";
-import { publishedPosts } from "../lib/posts";
+import { books, courses, site, topics } from "../site.config";
+import { url } from "../lib/utils";
 
-const posts = await publishedPosts();
-const latest = posts.slice(0, 6);
+const reading = (Object.entries(books) as [string, (typeof books)[keyof typeof books]][]).map(
+  ([id, book]) => ({
+    href: url(`/reading/#${id}`),
+    name: book.title,
+    hint: book.author,
+  }),
+);
+
+const studying = [
+  {
+    href: url("/math/#gaoshu-guide"),
+    name: courses["gaoshu-guide"].title,
+    hint: "按章往下。",
+  },
+  {
+    href: url("/hardware/"),
+    name: topics.hardware.name,
+    hint: "电路怎么通。",
+  },
+];
+
+const englishDoors = [
+  {
+    href: url("/english/words/"),
+    name: "词本",
+    hint: "记进去，一张张背。",
+  },
+  {
+    href: url("/english/phrases/"),
+    name: "用语",
+    hint: "按场合进。",
+  },
+];
 ---
 
 <Base>
-  <section class="feed">
-    <div class="section-title">
-      <h2>最近在学</h2>
-    </div>
-    <ul class="post-list">
-      {latest.map((post) => <PostCard post={post} />)}
-    </ul>
-  </section>
+  <header class="page-intro">
+    <p class="lede home-lede">{site.motto}</p>
+  </header>
+
+  <div class="home-cols">
+    <section class="home-col">
+      <h2>在读</h2>
+      <ul>
+        {
+          reading.map((item) => (
+            <li>
+              <a href={item.href}>{item.name}</a>
+              <p>{item.hint}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="home-col">
+      <h2>在学</h2>
+      <ul>
+        {
+          studying.map((item) => (
+            <li>
+              <a href={item.href}>{item.name}</a>
+              <p>{item.hint}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="home-col">
+      <h2>英语</h2>
+      <ul>
+        {
+          englishDoors.map((item) => (
+            <li>
+              <a href={item.href}>{item.name}</a>
+              <p>{item.hint}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </div>
+
+  <div class="home-end">
+    <blockquote class="home-quote">
+      <p>
+        感觉到了的东西，我们不能立刻理解它，<br />
+        只有理解了的东西才更深刻地感觉它。
+      </p>
+      <footer>毛泽东</footer>
+    </blockquote>
+  </div>
 </Base>

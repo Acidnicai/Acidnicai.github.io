@@ -1,8 +1,10 @@
 ---
 import Base from "../layouts/Base.astro";
+import BookSearch from "../components/BookSearch.astro";
 import PostCard from "../components/PostCard.astro";
-import { books, topics, type BookId, type TopicId } from "../site.config";
-import { postsByBook, postsByTopic, publishedPosts } from "../lib/posts";
+import { books, coursesForTopic, topics, type BookId, type TopicId } from "../site.config";
+import { postsByBook, postsByCourse, postsByTopic, publishedPosts } from "../lib/posts";
+import { url } from "../lib/utils";
 
 export function getStaticPaths() {
   return (Object.keys(topics) as TopicId[]).map((topic) => ({
@@ -19,39 +21,108 @@ const { topic } = Astro.props;
 const meta = topics[topic];
 const posts = postsByTopic(await publishedPosts(), topic);
 const bookEntries = Object.entries(books) as [BookId, (typeof books)[BookId]][];
+const topicCourses = coursesForTopic(topic);
+const otherPosts = posts.filter((post) => !post.data.course);
+const otherFirst = topic === "english";
+const otherHeading = topic === "english" ? "怎么看英语" : "其他笔记";
 ---
 
 <Base title={meta.name} description={meta.description}>
-  <div class="panel">
+  <header>
     <h1 class="page-title">{meta.name}</h1>
     <p class="lede">{meta.description} 目前 {posts.length} 篇。</p>
-  </div>
+  </header>
   {
     topic === "reading" ? (
-      bookEntries.map(([id, book]) => {
+      <>
+      <BookSearch />
+      {bookEntries.map(([id, book]) => {
         const chapters = postsByBook(posts, id);
+        const searchText = [book.title, book.author, book.description].join(" ");
         return (
-          <section class="year-group feed" id={id}>
-            <h2>{book.title}</h2>
-            <p class="lede">
-              {book.author}。{book.description}
-            </p>
+          <section class="book-shelf" id={id} data-search={searchText}>
+            <header class="book-shelf__head">
+              <h2>{book.title}</h2>
+              <p class="lede">
+                {book.author}。{book.description}
+              </p>
+            </header>
             {chapters.length > 0 ? (
               <ul class="post-list">
                 {chapters.map((post) => (
-                  <PostCard post={post} />
+                  <PostCard post={post} nested />
                 ))}
               </ul>
             ) : (
-              <p class="lede">这一本还没有章节笔记。</p>
+              <p class="section-note">这一本还没有章节笔记。</p>
             )}
           </section>
         );
-      })
+      })}
+      </>
+    ) : topicCourses.length > 0 ? (
+      <>
+        {otherFirst && otherPosts.length > 0 && (
+          <section class="series">
+            <header class="series__head">
+              <h2>{otherHeading}</h2>
+            </header>
+            <ul class="post-list">
+              {otherPosts.map((post) => (
+                <PostCard post={post} nested />
+              ))}
+            </ul>
+          </section>
+        )}
+        {topicCourses.map(([id, course]) => {
+          const chapters = postsByCourse(posts, id);
+          return (
+            <section class="series" id={id}>
+              <header class="series__head">
+                <h2>{course.title}</h2>
+                <p class="lede">{course.description}</p>
+              </header>
+              {id === "english-words" && (
+                <a class="series-tool" href={url("/english/words/")}>
+                  <span class="series-tool__name">词本</span>
+                  <span class="series-tool__hint">往里面记词条，也可以一张张背。</span>
+                </a>
+              )}
+              {id === "living-english" && (
+                <a class="series-tool" href={url("/english/phrases/")}>
+                  <span class="series-tool__name">按场合进</span>
+                  <span class="series-tool__hint">商店、餐厅、记笔记、打牌……点进一类才看该用的话。</span>
+                </a>
+              )}
+              {chapters.length > 0 ? (
+                <ul class="post-list">
+                  {chapters.map((post) => (
+                    <PostCard post={post} nested />
+                  ))}
+                </ul>
+              ) : (
+                <p class="section-note">这个模块还没有章节笔记。</p>
+              )}
+            </section>
+          );
+        })}
+        {!otherFirst && otherPosts.length > 0 && (
+          <section class="series">
+            <header class="series__head">
+              <h2>{otherHeading}</h2>
+            </header>
+            <ul class="post-list">
+              {otherPosts.map((post) => (
+                <PostCard post={post} nested />
+              ))}
+            </ul>
+          </section>
+        )}
+      </>
     ) : (
       <ul class="post-list">
         {posts.map((post) => (
-          <PostCard post={post} />
+          <PostCard post={post} nested />
         ))}
       </ul>
     )

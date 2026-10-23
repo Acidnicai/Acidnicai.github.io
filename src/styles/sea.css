@@ -1,0 +1,983 @@
+.page-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: #8fd4f2;
+}
+
+.sea {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 360vh;
+  transform: translateY(calc(var(--dive) * -260vh));
+}
+
+.sea__water {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    #9ad7f8 0%,
+    #d7f4ff 9%,
+    #8fd8f6 12.4%,
+    #2ec4e6 13.6%,
+    #1aaedc 24%,
+    #1496c8 40%,
+    #127eae 52%,
+    #0e6494 62%,
+    #0b4c78 70%,
+    #083858 78%,
+    #06243c 86%,
+    #041628 93%,
+    #040c18 100%
+  );
+}
+
+html[data-sea="glacial"] .sea__water {
+  background: linear-gradient(
+    180deg,
+    #e7f7ff 0%,
+    #f7fcff 10%,
+    #d5f0fb 13%,
+    #b9e4f6 28%,
+    #7eb8d8 48%,
+    #3d6f99 70%,
+    #10243c 100%
+  );
+}
+
+html[data-sea="kelp"] .sea__water {
+  background: linear-gradient(
+    180deg,
+    #c5ecf8 0%,
+    #e7f8ea 10%,
+    #8fd4b0 14%,
+    #3aaa78 32%,
+    #1d7a62 52%,
+    #0e4a42 74%,
+    #06241c 100%
+  );
+}
+
+html[data-sea="vents"] .sea__water {
+  background: linear-gradient(
+    180deg,
+    #d9cbb8 0%,
+    #efe2d2 8%,
+    #8a6248 14%,
+    #4a4038 34%,
+    #2a2428 52%,
+    #1a1214 74%,
+    #10080c 100%
+  );
+}
+
+html[data-sea="atlantis"] .sea__water {
+  background: linear-gradient(
+    180deg,
+    #b7e4de 0%,
+    #e5f6f2 8%,
+    #6ec4bc 14%,
+    #2a8f96 32%,
+    #14606a 50%,
+    #0c3a48 70%,
+    #071820 100%
+  );
+}
+
+.sea__sun {
+  position: absolute;
+  top: 2.4%;
+  left: 18%;
+  width: 72px;
+  height: auto;
+  shape-rendering: crispEdges;
+}
+
+.cloud,
+.gull {
+  position: absolute;
+  height: auto;
+  shape-rendering: crispEdges;
+}
+
+.cloud--1 { top: 3.2%; left: 6%; width: 120px; }
+.cloud--2 { top: 5%; left: 48%; width: 96px; }
+.cloud--3 { top: 2.6%; left: 74%; width: 108px; }
+
+.gull--1 { top: 3.4%; left: 3%; width: 92px; animation: gull 18s linear infinite; }
+.gull--2 { top: 5.2%; right: 4%; left: auto; width: 70px; animation: gull 24s linear infinite; animation-delay: -9s; }
+
+html[data-sea="atlantis"] .sea__sun,
+html[data-sea="atlantis"] .cloud,
+html[data-sea="atlantis"] .gull,
+html[data-sea="vents"] .sea__sun,
+html[data-sea="vents"] .cloud,
+html[data-sea="vents"] .gull {
+  display: none;
+}
+
+.sea__rays {
+  position: absolute;
+  top: 12%;
+  left: -6%;
+  width: 70%;
+  height: 28%;
+  background: repeating-linear-gradient(
+    100deg,
+    transparent 0 36px,
+    rgb(255 255 255 / 0.28) 36px 48px
+  );
+  mask-image: linear-gradient(to bottom, #000, transparent 90%);
+  animation: sea-rays 10s ease-in-out infinite;
+}
+
+html[data-sea="vents"] .sea__rays {
+  opacity: 0.25;
+}
+
+.sea__wave {
+  position: absolute;
+  top: 12.4%;
+  left: 0;
+  width: 100%;
+  height: 22px;
+  shape-rendering: crispEdges;
+}
+
+.boat {
+  position: absolute;
+  top: 7.6%;
+  left: 6%;
+  width: 320px;
+  height: auto;
+  overflow: visible;
+  shape-rendering: crispEdges;
+  animation: boat-bob 3.4s ease-in-out infinite;
+}
+
+html[data-sea="glacial"] .boat,
+html[data-sea="kelp"] .boat,
+html[data-sea="vents"] .boat,
+html[data-sea="atlantis"] .boat {
+  display: none;
+}
+
+.fish,
+.jelly,
+.diver,
+.angler,
+.dolphin,
+.turtle,
+.manta,
+.shark,
+.wall,
+.drip,
+.kraken,
+.kelp,
+.stalk,
+.canopy,
+.boulder,
+.pinnacle,
+.urchin,
+.otter,
+.garibaldi,
+.seastar,
+.coral,
+.berg,
+.crystal,
+.brinicle,
+.crevasse,
+.floe,
+.algae,
+.icefish,
+.seal,
+.angel,
+.krill,
+.pressure,
+.chimney,
+.column,
+.arch,
+.mosaic,
+.temple,
+.colonnade,
+.statue,
+.dome,
+.stairs,
+.brazier,
+.plaza,
+.worm,
+.shrimp,
+.crab,
+.eel,
+.mussel,
+.basalt,
+.ridge,
+.mat {
+  position: absolute;
+  left: 0;
+  height: auto;
+  overflow: visible;
+  shape-rendering: crispEdges;
+}
+
+.fish--1 {
+  top: 18%;
+  width: 168px;
+  animation: sea-swim 24s linear infinite;
+}
+
+.fish--2 {
+  top: 23%;
+  width: 96px;
+  animation: sea-swim-back 18s linear infinite;
+  animation-delay: -6s;
+}
+
+.fish--3 {
+  top: 31%;
+  width: 118px;
+  animation: sea-swim 28s linear infinite;
+  animation-delay: -11s;
+}
+
+.fish--4 {
+  top: 57%;
+  width: 84px;
+  animation: sea-swim-back 20s linear infinite;
+  animation-delay: -4s;
+}
+
+.jelly--1 {
+  top: 43%;
+  left: 58%;
+  width: 64px;
+  animation: sea-bob 5s ease-in-out infinite;
+}
+
+.diver {
+  top: 49%;
+  width: 168px;
+  animation: sea-swim 34s linear infinite;
+}
+
+.sea__bubbles i {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 32%, #fff 0 2px, transparent 3px),
+    radial-gradient(circle at 50% 50%, rgb(255 255 255 / 0.2) 0 58%, #c5e9f6 59% 78%, transparent 79%);
+  animation: sea-rise linear infinite;
+}
+
+.sea__bubbles i:nth-child(1) { left: 14%; top: 20%; animation-duration: 12s; }
+.sea__bubbles i:nth-child(2) { left: 32%; top: 28%; width: 8px; height: 8px; animation-duration: 10s; animation-delay: -3s; }
+.sea__bubbles i:nth-child(3) { left: 58%; top: 22%; animation-duration: 14s; animation-delay: -6s; }
+.sea__bubbles i:nth-child(4) { left: 74%; top: 36%; width: 8px; height: 8px; animation-duration: 11s; animation-delay: -2s; }
+.sea__bubbles i:nth-child(5) { left: 22%; top: 48%; animation-duration: 13s; animation-delay: -8s; }
+.sea__bubbles i:nth-child(6) { left: 66%; top: 60%; width: 8px; height: 8px; animation-duration: 15s; animation-delay: -5s; }
+
+.reef,
+.kelpbed,
+.ice,
+.chimneys,
+.ruins,
+.bluehole,
+.deep {
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+
+.reef {
+  top: 22%;
+  height: 16%;
+  background: linear-gradient(180deg, transparent 62%, #e7cf96 62%, #c6a56a 100%);
+}
+
+html[data-sea="glacial"] .reef,
+html[data-sea="kelp"] .reef,
+html[data-sea="vents"] .reef,
+html[data-sea="atlantis"] .reef {
+  display: none;
+}
+
+.coral {
+  bottom: 6%;
+  width: 120px;
+}
+
+.coral--1 { left: 8%; }
+.coral--2 { left: 26%; width: 100px; }
+.coral--3 { left: 60%; }
+.coral--4 { left: 78%; width: 92px; }
+.coral--5 { left: 0; width: 108px; }
+.coral--6 { left: auto; right: 0; width: 96px; }
+
+.bluehole { display: none; }
+html[data-sea="bluehole"] .bluehole {
+  display: block;
+  inset: 0;
+  --gutter: max(72px, calc((100% - 44rem) / 2));
+}
+
+.dolphin--1 {
+  top: 17%;
+  left: 0;
+  width: min(210px, calc(var(--gutter) - 6px));
+  animation: sea-bob 5.2s ease-in-out infinite;
+}
+.turtle--1 {
+  top: 20%;
+  left: auto;
+  right: 0;
+  width: min(168px, calc(var(--gutter) - 8px));
+  animation: sea-bob 6.2s ease-in-out infinite;
+}
+
+.wall--1 { top: 30%; left: 0; width: min(132px, var(--gutter)); }
+.wall--2 { top: 36%; left: auto; right: 0; width: min(118px, var(--gutter)); }
+.wall--3 { top: 58%; left: 0; width: min(148px, var(--gutter)); }
+
+.drip--1 { top: 28%; left: min(28px, calc(var(--gutter) * 0.18)); width: 34px; }
+.drip--2 { top: 33%; left: auto; right: min(22px, calc(var(--gutter) * 0.14)); width: 28px; }
+.drip--3 { top: 54%; left: min(16px, calc(var(--gutter) * 0.08)); width: 40px; }
+.drip--4 { top: 62%; left: auto; right: 6px; width: 30px; }
+
+.manta--1 {
+  top: 42%;
+  left: auto;
+  right: 0;
+  width: min(230px, calc(var(--gutter) - 4px));
+  animation: sea-bob 7s ease-in-out infinite;
+}
+.shark { animation: sea-swim 24s linear infinite; }
+.shark--1 { top: 46%; width: 210px; animation-delay: -9s; }
+.shark--2 { top: 66%; width: 160px; animation-name: sea-swim-back; animation-delay: -14s; }
+
+.kelpbed,
+.ice,
+.chimneys,
+.ruins {
+  display: none;
+  inset: 0;
+}
+
+html[data-sea="kelp"] .kelpbed,
+html[data-sea="glacial"] .ice,
+html[data-sea="vents"] .chimneys,
+html[data-sea="atlantis"] .ruins {
+  display: block;
+}
+
+.kelp {
+  bottom: 18%;
+  width: 72px;
+  transform-origin: 50% 100%;
+  animation: sea-sway 3.6s ease-in-out infinite;
+}
+
+.kelp--1 { left: 3%; bottom: 76%; width: 96px; }
+.kelp--2 { left: 12%; bottom: 73%; width: 120px; animation-delay: -1s; }
+.kelp--3 { left: 78%; bottom: 68%; animation-delay: -2s; }
+.kelp--4 { left: 40%; bottom: 36%; width: 80px; }
+.kelp--5 { left: 62%; bottom: 30%; animation-delay: -1.6s; }
+
+html[data-sea="kelp"] .sea .fish,
+html[data-sea="kelp"] .sea .jelly {
+  display: none;
+}
+
+html[data-sea="kelp"] .kelpbed {
+  --gutter: max(72px, calc((100% - 44rem) / 2));
+}
+
+.kelpbed::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, transparent 20%, rgb(86 64 36 / 0.28) 28%, transparent 38%),
+    linear-gradient(180deg, transparent 54%, rgb(42 32 18 / 0.38) 68%, transparent 82%),
+    linear-gradient(90deg, rgb(12 48 32 / 0.28) 0 7%, transparent 16%),
+    linear-gradient(270deg, rgb(10 40 28 / 0.28) 0 7%, transparent 15%);
+}
+
+.canopy--1 { top: 12.6%; left: 0; width: min(340px, var(--gutter)); }
+.canopy--2 { top: 12.9%; left: auto; right: 0; width: min(300px, var(--gutter)); }
+
+.stalk {
+  transform-origin: 50% 100%;
+  animation: sea-sway 4.4s ease-in-out infinite;
+}
+.stalk--1 { top: 13%; left: 0; width: min(78px, calc(var(--gutter) * 0.82)); }
+.stalk--2 { top: 15%; left: min(56px, calc(var(--gutter) * 0.22)); width: min(90px, calc(var(--gutter) * 0.7)); animation-delay: -1.4s; }
+.stalk--3 { top: 13.2%; left: auto; right: 0; width: min(84px, calc(var(--gutter) * 0.86)); animation-delay: -2.2s; }
+.stalk--4 { top: 15.6%; left: auto; right: min(40px, calc(var(--gutter) * 0.16)); width: min(70px, calc(var(--gutter) * 0.62)); animation-delay: -0.7s; }
+.stalk--5 { top: 40%; left: 0; width: min(108px, var(--gutter)); animation-delay: -1s; }
+.stalk--6 { top: 46%; left: auto; right: 0; width: min(116px, var(--gutter)); animation-delay: -2.6s; }
+.stalk--7 { top: 68%; left: min(48px, calc(var(--gutter) * 0.2)); width: min(96px, calc(var(--gutter) * 0.8)); animation-delay: -0.4s; }
+.stalk--8 { top: 74%; left: auto; right: min(36px, calc(var(--gutter) * 0.14)); width: min(120px, var(--gutter)); animation-delay: -1.8s; }
+
+.boulder--1 { top: 23%; left: 0; width: min(220px, var(--gutter)); }
+.boulder--2 { top: 50%; left: 0; width: min(260px, calc(var(--gutter) + 20px)); }
+.boulder--3 { top: 78%; left: auto; right: 0; width: min(280px, calc(var(--gutter) + 24px)); }
+
+.pinnacle--1 { top: 34%; left: auto; right: 0; width: min(124px, var(--gutter)); }
+.pinnacle--2 { top: 62%; left: 0; width: min(140px, var(--gutter)); }
+
+.urchin--1 { top: 24.5%; left: max(4px, calc(var(--gutter) * 0.08)); width: min(64px, calc(var(--gutter) * 0.7)); }
+.urchin--2 { top: 52%; left: max(8px, calc(var(--gutter) * 0.16)); width: 70px; }
+.urchin--3 { top: 73%; left: auto; right: max(6px, calc(var(--gutter) * 0.08)); width: 64px; }
+.urchin--4 { top: 82%; left: max(12px, calc(var(--gutter) * 0.28)); width: 56px; }
+
+.seastar--1 { top: 55%; left: max(8px, calc(var(--gutter) * 0.22)); width: 78px; }
+.seastar--2 { top: 80%; left: auto; right: max(10px, calc(var(--gutter) * 0.2)); width: 86px; }
+.seastar--3 { top: 86%; left: 4%; width: 64px; }
+
+.garibaldi { animation: sea-swim 18s linear infinite; }
+.garibaldi--1 {
+  top: 21%;
+  left: max(2px, calc(var(--gutter) * 0.1));
+  width: min(156px, calc(var(--gutter) - 8px));
+  animation: sea-bob 4.6s ease-in-out infinite;
+}
+.garibaldi--2 { top: 44%; width: 132px; animation-delay: -7s; }
+.garibaldi--3 { top: 82%; width: 118px; animation-name: sea-swim-back; animation-delay: -4s; }
+
+.otter { width: min(210px, calc(var(--gutter) - 8px)); animation: sea-swim 28s linear infinite; }
+.otter--1 {
+  top: 22%;
+  left: auto;
+  right: 0;
+  animation: sea-bob 5.6s ease-in-out infinite;
+}
+.otter--2 { top: 70%; animation-name: sea-swim-back; animation-delay: -9s; }
+
+html[data-sea="glacial"] .sea .fish,
+html[data-sea="glacial"] .sea .jelly {
+  display: none;
+}
+
+.ice::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgb(186 224 242 / 0.55) 0 7%, transparent 16%),
+    linear-gradient(270deg, rgb(170 214 236 / 0.5) 0 6%, transparent 14%),
+    linear-gradient(180deg, transparent 34%, rgb(90 150 186 / 0.28) 48%, transparent 62%),
+    linear-gradient(180deg, transparent 68%, rgb(16 36 60 / 0.4) 82%, transparent 94%);
+}
+
+.floe--1 { top: 13.2%; left: 0; width: 260px; }
+.floe--2 { top: 13.6%; left: auto; right: 0; width: 220px; }
+
+.berg--1 { top: 11.2%; left: 1%; width: 190px; }
+.berg--2 { top: 11.6%; left: auto; right: 2%; width: 160px; }
+.berg--3 { top: 58%; left: 6%; width: 220px; }
+
+.brinicle--1 { top: 17%; left: 5%; width: 52px; }
+.brinicle--2 { top: 18%; left: auto; right: 8%; width: 40px; }
+.brinicle--3 { top: 44%; left: 18%; width: 68px; }
+.brinicle--4 { top: 66%; left: auto; right: 14%; width: 58px; }
+
+.crevasse--1 { top: 22%; left: 0; width: 132px; }
+.crevasse--2 { top: 52%; left: auto; right: 0; width: 150px; }
+
+.pressure--1 { top: 36%; left: 0; width: min(280px, 24vw); }
+.pressure--2 { top: 78%; left: auto; right: 0; width: min(320px, 28vw); }
+
+.algae--1 { top: 26%; left: 0; width: min(340px, 30vw); }
+.algae--2 { top: 72%; left: 8%; width: min(420px, 36vw); }
+
+.crystal--1 { top: 32%; left: 10%; width: 64px; }
+.crystal--2 { top: 48%; left: 28%; width: 86px; }
+.crystal--3 { top: 40%; left: auto; right: 10%; width: 72px; }
+.crystal--4 { top: 70%; left: 22%; width: 54px; }
+.crystal--5 { top: 84%; left: auto; right: 22%; width: 70px; }
+
+.angel { animation: sea-bob 4.6s ease-in-out infinite; }
+.angel--1 { top: 22%; left: 18%; width: 72px; }
+.angel--2 { top: 50%; left: auto; right: 12%; width: 64px; animation-delay: -1.6s; }
+.angel--3 { top: 80%; left: 34%; width: 80px; animation-delay: -3s; }
+
+.krill { animation: sea-swim 14s linear infinite; }
+.krill--1 { top: 21%; width: 52px; animation-delay: -2.4s; }
+.krill--2 {
+  top: 25%;
+  left: auto;
+  right: 16%;
+  width: 48px;
+  animation: sea-bob 3.8s ease-in-out infinite;
+}
+.krill--3 { top: 46%; width: 46px; animation-name: sea-swim-back; animation-delay: -4s; }
+.krill--4 { top: 64%; width: 36px; animation-delay: -11s; }
+.krill--5 { top: 82%; width: 48px; animation-name: sea-swim-back; animation-delay: -6s; }
+
+.icefish { width: 150px; animation: sea-swim 22s linear infinite; }
+.icefish--1 {
+  top: 20%;
+  left: 11%;
+  width: 188px;
+  animation: sea-bob 5.2s ease-in-out infinite;
+}
+.icefish--2 { top: 56%; width: 128px; animation-name: sea-swim-back; animation-delay: -12s; }
+
+.seal { width: 176px; animation: sea-swim 30s linear infinite; }
+.seal--1 {
+  top: 23%;
+  left: auto;
+  right: 3%;
+  width: 210px;
+  animation: sea-bob 6.4s ease-in-out infinite;
+}
+.seal--2 { top: 74%; animation-name: sea-swim-back; animation-delay: -8s; }
+
+html[data-sea="vents"] .fish,
+html[data-sea="vents"] .jelly {
+  display: none;
+}
+
+.chimneys::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, transparent 16%, rgb(42 24 18 / 0.45) 22%, transparent 32%),
+    linear-gradient(180deg, transparent 46%, rgb(28 16 12 / 0.5) 54%, transparent 66%),
+    linear-gradient(180deg, transparent 74%, rgb(18 10 8 / 0.55) 84%, transparent 96%);
+}
+
+.chimney { animation: vent-glow 1.8s ease-in-out infinite; }
+.chimney--1 { top: 10%; left: 3%; width: 108px; }
+.chimney--2 { top: 36%; left: 42%; width: 140px; }
+.chimney--3 { top: 62%; left: auto; right: 2%; width: 120px; }
+.chimney--4 { top: 18%; left: auto; right: 4%; width: 78px; }
+
+.worm--1 { top: 16%; left: 1%; width: 150px; }
+.worm--2 { top: 20%; left: auto; right: 1%; width: 120px; }
+.worm--3 { top: 44%; left: 36%; width: 170px; }
+.worm--4 { top: 70%; left: 6%; width: 160px; }
+
+.basalt--1 { top: 20%; left: 0; width: 200px; }
+.basalt--2 { top: 22%; left: auto; right: 0; width: 170px; }
+.basalt--3 { top: 50%; left: 8%; width: 230px; }
+.basalt--4 { top: 76%; left: auto; right: 6%; width: 210px; }
+
+.ridge--1 { top: 24%; left: 0; width: min(640px, 70vw); }
+.ridge--2 { top: 78%; left: auto; right: 0; width: min(720px, 78vw); }
+
+.mat { left: 0; width: 100%; height: 36px; }
+.mat--1 { top: 26%; }
+.mat--2 { top: 58%; }
+
+.mussel--1 { top: 27%; left: 12%; width: 120px; }
+.mussel--2 { top: 52%; left: auto; right: 8%; width: 140px; }
+.mussel--3 { top: 82%; left: 18%; width: 130px; }
+
+.crab--1 { top: 23%; left: 18%; width: 120px; }
+.crab--2 { top: 66%; left: auto; right: 14%; width: 100px; }
+
+.shrimp { width: 110px; animation: sea-swim 16s linear infinite; }
+.shrimp--1 { top: 14%; animation-duration: 14s; animation-delay: -5s; }
+.shrimp--2 { top: 19%; width: 84px; animation-name: sea-swim-back; animation-duration: 18s; animation-delay: -11s; }
+.shrimp--3 { top: 46%; width: 96px; animation-duration: 20s; animation-delay: -7s; }
+.shrimp--4 { top: 72%; width: 78px; animation-name: sea-swim-back; animation-duration: 15s; animation-delay: -4s; }
+
+.eel { width: 200px; animation: sea-swim 26s linear infinite; }
+.eel--1 { top: 17%; animation-delay: -12s; }
+.eel--2 { top: 64%; width: 160px; animation-name: sea-swim-back; animation-delay: -6s; }
+
+.ruins {
+  --gutter: max(88px, calc((100% - 46rem) / 2));
+}
+
+.ruins::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 18%;
+  height: 78%;
+  background:
+    radial-gradient(ellipse at 18% 22%, rgb(230 197 106 / 0.2), transparent 36%),
+    radial-gradient(ellipse at 78% 48%, rgb(90 210 196 / 0.16), transparent 34%),
+    radial-gradient(ellipse at 46% 74%, rgb(232 196 120 / 0.14), transparent 40%);
+}
+
+.plaza {
+  left: 0;
+  width: 100%;
+  height: 64px;
+}
+
+.plaza--1 { top: 30%; }
+.plaza--2 { top: 61%; }
+.plaza--3 { top: 84%; }
+
+.stairs--1 { top: 26%; left: 0; width: min(440px, 40vw); }
+.stairs--2 { top: 67%; left: auto; right: 0; width: min(520px, 48vw); }
+
+.temple--1 { top: 8%; left: 0; width: min(300px, var(--gutter)); }
+.temple--2 { top: 9%; left: auto; right: 0; width: min(280px, var(--gutter)); }
+.temple--3 { top: 46%; left: 50%; width: min(460px, 58vw); transform: translateX(-50%); }
+
+.colonnade--1 { top: 21%; left: 0; width: min(360px, calc(var(--gutter) + 48px)); }
+.colonnade--2 { top: 72%; left: auto; right: 0; width: min(420px, 50vw); }
+
+.dome--1 { top: 33%; left: 0; width: min(210px, var(--gutter)); }
+.dome--2 { top: 76%; left: 28%; width: min(300px, 40vw); }
+
+.statue--1 { top: 17%; left: 0.35rem; width: 74px; }
+.statue--2 { top: 54%; left: auto; right: 0.5rem; width: 92px; }
+
+.arch--1 { top: 39%; left: 0; width: min(210px, var(--gutter)); }
+.arch--2 { top: 57%; left: auto; right: 0; width: min(190px, var(--gutter)); }
+
+.column--1 { top: 14%; left: 0.15rem; width: 52px; }
+.column--2 { top: 35%; left: auto; right: 0.2rem; width: 58px; }
+.column--3 { top: 50%; left: 4%; width: 64px; }
+.column--4 { top: 43%; left: auto; right: 10%; width: 46px; }
+.column--5 { top: 79%; left: 8%; width: 70px; }
+
+.fallen { width: 128px; }
+.fallen--1 { top: 41%; left: 18%; transform: rotate(76deg); }
+.fallen--2 { top: 88%; left: auto; right: 12%; transform: rotate(-62deg); }
+
+.brazier { width: 44px; animation: vent-glow 1.6s ease-in-out infinite; }
+.brazier--1 { top: 23%; left: 16%; }
+.brazier--2 { top: 44%; left: auto; right: 6%; }
+.brazier--3 { top: 81%; left: 42%; }
+
+.kelp--r1,
+.kelp--r2,
+.kelp--r3,
+.coral--r1,
+.coral--r2 { bottom: auto; }
+
+.kelp--r1 { top: 28%; left: 1%; width: 58px; }
+.kelp--r2 { top: 55%; right: 2%; left: auto; width: 70px; }
+.kelp--r3 { top: 74%; left: 6%; width: 64px; }
+.coral--r1 { top: 37%; left: 2%; width: 92px; }
+.coral--r2 { top: 69%; right: 4%; left: auto; width: 84px; }
+
+.mosaic { top: 91%; left: 0; width: 100%; }
+
+.deep {
+  top: 72%;
+  height: 28%;
+  background: linear-gradient(180deg, transparent, rgb(0 0 0 / 0.35));
+}
+
+html[data-sea="bluehole"] .deep {
+  top: 42%;
+  height: 58%;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    transparent 16%,
+    rgb(8 32 52 / 0.06) 32%,
+    rgb(5 20 38 / 0.2) 48%,
+    rgb(3 12 24 / 0.4) 64%,
+    rgb(2 8 16 / 0.62) 80%,
+    rgb(1 4 10 / 0.78) 100%
+  );
+}
+
+html[data-sea="bluehole"] .angler {
+  top: 62%;
+}
+
+.angler {
+  top: 4%;
+  width: 170px;
+  height: auto;
+  animation: sea-swim 26s linear infinite;
+}
+
+.kraken { display: none; }
+html[data-sea="bluehole"] .kraken {
+  display: block;
+  left: 42%;
+  right: auto;
+  top: auto;
+  bottom: 0;
+  width: min(1100px, 92vw);
+  height: min(520px, 58vh);
+  translate: -50% 0;
+}
+
+.kraken__mass {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.9;
+  mask-image: radial-gradient(ellipse at 50% 42%, #000 6%, transparent 72%);
+}
+
+.kraken__eye {
+  --look-x: 0px;
+  --look-y: 0px;
+  position: absolute;
+  top: 36%;
+  width: 72px;
+  height: 44px;
+}
+
+.kraken__eye--l { left: 34%; }
+.kraken__eye--r { left: 52%; }
+
+.kraken__eye i {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 34px;
+  height: 22px;
+  margin: -11px 0 0 -17px;
+  border-radius: 50%;
+  background:
+    linear-gradient(#07080a, #07080a) center / 3px 16px no-repeat,
+    radial-gradient(ellipse at 50% 50%, #f4edd4 0 8px, rgb(80 88 58 / 0.22) 11px, transparent 17px);
+  box-shadow: 0 0 18px 4px rgb(230 220 160 / 0.35);
+  transform: translate(var(--look-x), var(--look-y));
+}
+
+html[data-sea="bluehole"] .deep::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    transparent 36%,
+    rgb(1 6 14 / 0.12) 58%,
+    rgb(1 4 10 / 0.4) 78%,
+    rgb(1 3 8 / 0.62) 100%
+  );
+  pointer-events: none;
+}
+
+html[data-sea="atlantis"] .angler { display: none; }
+
+.motes i {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: #9dffe8;
+  box-shadow: 0 0 8px #7dffe0;
+  animation: mote 3.2s ease-in-out infinite;
+}
+
+.motes i:nth-child(1) { top: 20%; left: 12%; }
+.motes i:nth-child(2) { top: 40%; left: 28%; animation-delay: -1s; }
+.motes i:nth-child(3) { top: 30%; left: 48%; }
+.motes i:nth-child(4) { top: 55%; left: 62%; animation-delay: -2s; }
+.motes i:nth-child(5) { top: 22%; left: 74%; }
+.motes i:nth-child(6) { top: 68%; left: 36%; animation-delay: -0.6s; }
+.motes i:nth-child(7) { top: 48%; left: 84%; }
+.motes i:nth-child(8) { top: 72%; left: 16%; animation-delay: -1.4s; }
+
+html[data-sea="vents"] .motes i { background: #ffb15a; box-shadow: 0 0 8px #ff7a3a; }
+html[data-sea="atlantis"] .motes i { background: #e6c56a; box-shadow: 0 0 8px #f0d48a; }
+html[data-sea="glacial"] .motes i { background: #e7f7ff; box-shadow: 0 0 8px #b9e4f6; }
+
+.sea__pool {
+  position: absolute;
+  right: 0;
+  top: 12%;
+  width: 46%;
+  height: 76%;
+  opacity: var(--wallpaper-p);
+  background: radial-gradient(
+    ellipse at 72% 46%,
+    rgb(236 248 252 / 0.94) 0%,
+    rgb(198 228 220 / 0.62) 42%,
+    transparent 74%
+  );
+}
+
+.sea__hud {
+  position: absolute;
+  left: max(4vw, 1rem);
+  bottom: 1.15rem;
+  margin: 0;
+  padding: 0.28rem 0.55rem 0.22rem;
+  color: #f6e7b4;
+  background: #14202c;
+  border: 3px solid #e2b15a;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  z-index: 4;
+}
+
+.sea__hud strong { font-weight: 700; }
+
+.page-bg__frame {
+  position: absolute;
+  inset: 4%;
+  opacity: var(--wallpaper-p);
+}
+
+.page-bg__frame span {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border: 3px solid #f3e2b0;
+}
+
+.page-bg__frame span:nth-child(1) { top: 0; left: 0; border-right: 0; border-bottom: 0; }
+.page-bg__frame span:nth-child(2) { top: 0; right: 0; border-left: 0; border-bottom: 0; }
+.page-bg__frame span:nth-child(3) { bottom: 0; left: 0; border-right: 0; border-top: 0; }
+.page-bg__frame span:nth-child(4) { bottom: 0; right: 0; border-left: 0; border-top: 0; }
+
+@keyframes sea-swim {
+  from { transform: translateX(-16vw); }
+  to { transform: translateX(108vw); }
+}
+
+@keyframes sea-swim-back {
+  from { transform: translateX(108vw) scaleX(-1); }
+  to { transform: translateX(-16vw) scaleX(-1); }
+}
+
+@keyframes sea-rise {
+  from { transform: translateY(0); opacity: 0; }
+  12% { opacity: 0.85; }
+  to { transform: translateY(-42vh); opacity: 0; }
+}
+
+@keyframes sea-bob {
+  50% { transform: translateY(10px); }
+}
+
+@keyframes boat-bob {
+  50% { transform: translateY(7px); }
+}
+
+@keyframes sea-sway {
+  50% { transform: rotate(7deg); }
+}
+
+@keyframes gull {
+  from { transform: translateX(0); }
+  to { transform: translateX(28vw); }
+}
+
+@keyframes sea-rays {
+  50% { transform: translateX(24px); }
+}
+
+@keyframes vent-glow {
+  50% { filter: brightness(1.35); }
+}
+
+@keyframes mote {
+  50% { opacity: 0.35; }
+}
+
+@keyframes sea-banner-swim {
+  from { transform: translateX(-2rem); }
+  to { transform: translateX(36rem); }
+}
+
+@keyframes sea-rise-short {
+  from { transform: translateY(1rem); opacity: 0; }
+  20% { opacity: 0.9; }
+  to { transform: translateY(-7rem); opacity: 0; }
+}
+
+.sea-banner {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: linear-gradient(180deg, #d7f4ff 0%, #2ec4e6 46%, #0e74aa 100%);
+}
+
+html[data-sea="glacial"] .sea-banner {
+  background: linear-gradient(180deg, #f7fcff, #9fd0ea 48%, #3d7eae);
+}
+
+html[data-sea="kelp"] .sea-banner {
+  background: linear-gradient(180deg, #e7f8ea, #5cbf8a 46%, #146856);
+}
+
+html[data-sea="vents"] .sea-banner {
+  background: linear-gradient(180deg, #efe2d2, #8a5a40 42%, #2a2428);
+}
+
+html[data-sea="atlantis"] .sea-banner {
+  background: linear-gradient(180deg, #e5f6f2, #3aa0a4 42%, #124e58);
+}
+
+.sea-banner .fish--a {
+  top: 28%;
+  left: 12%;
+  width: 150px;
+  height: auto;
+  animation: none;
+}
+
+.sea-banner .fish--b {
+  top: 58%;
+  width: 108px;
+  height: auto;
+  animation: sea-banner-swim 9s linear infinite;
+}
+
+.sea-banner i {
+  position: absolute;
+  bottom: 18%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 32%, #fff 0 2px, transparent 3px),
+    radial-gradient(circle at 50% 50%, rgb(255 255 255 / 0.35) 0 55%, #d7f1fb 56% 80%, transparent 81%);
+  animation: sea-rise-short 6s linear infinite;
+}
+
+.sea-banner i:nth-child(3) { left: 24%; }
+.sea-banner i:nth-child(4) { left: 56%; animation-delay: -2s; }
+.sea-banner i:nth-child(5) { left: 78%; animation-delay: -4s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .boat,
+  .fish,
+  .jelly,
+  .diver,
+  .angler,
+  .dolphin,
+  .turtle,
+  .manta,
+  .shark,
+  .gull,
+  .kelp,
+  .stalk,
+  .otter,
+  .garibaldi,
+  .gull,
+  .chimney,
+  .shrimp,
+  .eel,
+  .icefish,
+  .seal,
+  .krill,
+  .angel,
+  .brazier,
+  .sea__rays,
+  .sea__bubbles i,
+  .motes i,
+  .sea-banner .fish,
+  .sea-banner i {
+    animation: none;
+  }
+}
